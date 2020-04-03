@@ -28,6 +28,8 @@ public class DaysBeforeDateValidator implements ConstraintValidator<DaysBeforeDa
 
     @Override
     public boolean isValid(Date date, ConstraintValidatorContext constraintValidatorContext) {
+        if(date == null)
+            return false;
         long diff = date.getTime() - today.getTime();
         //System.out.println(diff);
         log.info(String.valueOf(diff));

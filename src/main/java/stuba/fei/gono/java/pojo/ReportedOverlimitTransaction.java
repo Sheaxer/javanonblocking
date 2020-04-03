@@ -37,12 +37,12 @@ public class ReportedOverlimitTransaction {
     @ValidAccount(message = "SOURCEACCOUNT_INVALID")
     private Account sourceAccount;
 
-    @DBRef
+   // @DBRef
     @NotNull(message = "CLIENTID_NOT_VALID")
-    @Valid
-    @JsonDeserialize(using = ClientDeserializer.class)
-    @JsonSerialize(using = ClientSerializer.class)
-    private Client clientId;
+    //@Valid
+    //@JsonDeserialize(using = ClientDeserializer.class)
+    //@JsonSerialize(using = ClientSerializer.class)
+    private String clientId;
 
     @NotBlank(message = "IDENTIFICATIONID_INVALID")
     private String identificationId;
@@ -76,17 +76,17 @@ public class ReportedOverlimitTransaction {
 
     private String note;
 
-    @DBRef
+    /*@DBRef
     @NotNull(message = "ORGANISATIONUNITID_NOT_VALID")
     @JsonDeserialize(using = OrganisationUnitDeserializer.class)
     @JsonSerialize(using = OrganisationUnitSerializer.class)
-    private OrganisationUnit organisationUnitID;
+    private OrganisationUnit organisationUnitID;*/
 
-    @DBRef
+    //@DBRef
     @NotNull(message = "CREATEDBY_NOT_VALID")
-    @JsonDeserialize(using = EmployeeDeserializer.class)
-    @JsonSerialize(using = EmployeeSerializer.class)
-    private Employee createdBy;
+    //@JsonDeserialize(using = EmployeeDeserializer.class)
+    //@JsonSerialize(using = EmployeeSerializer.class)
+    private String createdBy;
 
     @JsonIgnore
     private String zoneOffset;

@@ -30,7 +30,7 @@ public class OffsetDateTimeSerializer extends StdSerializer<OffsetDateTime> {
         log.info("I AM HERE");
         log.info(tmp);
 
-        if(tmp.lastIndexOf('Z') != -1)
+        /*if(tmp.lastIndexOf('Z') != -1)
         {
             tmp = tmp.substring(0,tmp.lastIndexOf('.')).concat("+00:00");
         }
@@ -41,7 +41,7 @@ public class OffsetDateTimeSerializer extends StdSerializer<OffsetDateTime> {
                 index2 = tmp.lastIndexOf('-');
             tmp = tmp.substring(0, index1).concat(
                     tmp.substring(index2));
-        }
+        }*/
         log.info(tmp);
         jsonGenerator.writeString(tmp);
     }
