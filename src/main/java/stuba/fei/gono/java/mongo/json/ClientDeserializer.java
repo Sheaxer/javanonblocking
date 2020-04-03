@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import stuba.fei.gono.java.blocking.mongo.repositories.ClientRepository;
+import reactor.core.publisher.Mono;
+import stuba.fei.gono.java.nonblocking.mongo.repositories.ClientRepository;
 import stuba.fei.gono.java.pojo.Client;
 
 import java.io.IOException;
@@ -36,8 +37,8 @@ public class ClientDeserializer extends StdDeserializer<Client > {
      */
     @Override
     public Client deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        Optional<Client> c = clientRepository.findById(jsonParser.getText());
-        return c.orElse(null);
+        Mono<Client> c = clientRepository.findById(jsonParser.getText());
+        return c.block();
         //throw new ReportedOverlimitTransactionException("CLIENTID_NOT_VALID");
     }
 }

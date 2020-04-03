@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import stuba.fei.gono.java.blocking.mongo.repositories.EmployeeRepository;
+import reactor.core.publisher.Mono;
+import stuba.fei.gono.java.nonblocking.mongo.repositories.EmployeeRepository;
 import stuba.fei.gono.java.pojo.Employee;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class EmployeeDeserializer extends StdDeserializer<Employee> {
 
     @Override
     public Employee deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        Optional<Employee> e =  employeeRepository.findById(jsonParser.getText());
-        return e.orElse(null);
+        Mono<Employee> e =  employeeRepository.findById(jsonParser.getText());
+        return e.block();
     }
 }
