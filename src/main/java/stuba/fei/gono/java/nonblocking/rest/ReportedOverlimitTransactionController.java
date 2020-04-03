@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import stuba.fei.gono.java.errors.ReportedOverlimitTransactionException;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.EmployeeRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.ReportedOverlimitTransactionRepository;
 import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
@@ -25,6 +26,6 @@ public class ReportedOverlimitTransactionController {
     @ResponseBody
     public Mono<ReportedOverlimitTransaction> getTransaction (@PathVariable String id)
     {
-        return transactionRepository.findById(id);
+        return transactionRepository.findById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_INVALID")));
     }
 }
