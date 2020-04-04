@@ -1,10 +1,12 @@
 package stuba.fei.gono.java.nonblocking.rest;
 
 import lombok.extern.slf4j.Slf4j;
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,9 +45,15 @@ public class ReportedOverlimitTransactionController {
     }
 
     @PostMapping(value = "/reportedOverlimitTransaction", consumes = "application/json")
-    public Mono<ResponseEntity> postTransaction(@RequestBody ReportedOverlimitTransaction newTransaction)
+    public Mono<ResponseEntity> postTransaction(@Valid @RequestBody ReportedOverlimitTransaction newTransaction)
     {
-        newTransaction.setId("zirgon");
+        /*if(result.hasErrors())
+        {
+            log.info("AAA");
+        }*/
+        //ReportedOverlimitTransaction newTransaction = monoTransaction.block();
+        //newTransaction = newTransaction.map( t-> {t.setId("zirgon"); return t;});
+        //newTransaction.setId("A");
         log.info("jes");
          /*Mono<String> responseBody = Mono.just(newTransaction).map(
                 body -> {
@@ -62,6 +70,9 @@ public class ReportedOverlimitTransactionController {
                     }
                 }
         );*/
+         //transactionRepository.saveAll(newTransaction);
+
+
         return transactionRepository.save(newTransaction).map(t ->
                     {ResponseEntity<ReportedOverlimitTransaction> x
                          = ResponseEntity.status(HttpStatus.OK).body(t); return x;}).cast(ResponseEntity.class);
