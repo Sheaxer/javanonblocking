@@ -20,14 +20,14 @@ public class ErrorHandler {
     @ExceptionHandler(ReportedOverlimitTransactionException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public List<String> springHandleNotFound(Exception ex)  {
+    public List<String> springHandleNotFound(Exception ex) {
         return new ArrayList<>(Collections.singleton(ex.getMessage()));
     }
 
     @ExceptionHandler(CreateReportedOverlimitTransactionException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String postException(Exception ex)  {
+    public String postException(Exception ex) {
         return ex.getMessage();
     }
 
@@ -39,8 +39,7 @@ public class ErrorHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<String> handleValidationExceptions(MethodArgumentNotValidException ex)
-    {
+    public List<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
         return ex.getBindingResult()
                 .getAllErrors().stream()
                 .map(ObjectError::getDefaultMessage)
@@ -50,8 +49,7 @@ public class ErrorHandler {
     @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException ex)
-    {
+    public String handleMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException ex) {
         return ex.getMessage();
     }
 
@@ -74,10 +72,7 @@ public class ErrorHandler {
     @ExceptionHandler(java.lang.IllegalArgumentException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleIllegalArgument(java.lang.IllegalArgumentException e)
-    {
+    public String handleIllegalArgument(java.lang.IllegalArgumentException e) {
         return "ILLEGAL_ARGUMENT";
     }
-
-
 }

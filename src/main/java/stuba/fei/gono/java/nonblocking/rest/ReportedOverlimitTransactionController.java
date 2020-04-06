@@ -1,27 +1,19 @@
 package stuba.fei.gono.java.nonblocking.rest;
 
 import lombok.extern.slf4j.Slf4j;
-import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import stuba.fei.gono.java.errors.ReportedOverlimitTransactionException;
-import stuba.fei.gono.java.nonblocking.mongo.repositories.EmployeeRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.ReportedOverlimitTransactionRepository;
 import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.java.validation.ReportedOverlimitTransactionValidator;
 
-import javax.validation.Valid;
-import javax.validation.ValidationException;
+import java.util.stream.Collectors;
+
 @Slf4j
 @RestController
 //@RequestMapping(value = "/reportedOverlimitTransaction")
@@ -42,11 +34,13 @@ public class ReportedOverlimitTransactionController {
     public Mono<ReportedOverlimitTransaction> getTransaction (@PathVariable String id)
     {
         return transactionRepository.findById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_INVALID")));
+
     }
 
     @PostMapping(value = "/reportedOverlimitTransaction", consumes = "application/json")
-    public Mono<ResponseEntity> postTransaction(@Valid @RequestBody ReportedOverlimitTransaction newTransaction)
+    public Mono<ResponseEntity> postTransaction( @RequestBody ReportedOverlimitTransaction newTransaction)
     {
+        
         /*if(result.hasErrors())
         {
             log.info("AAA");
@@ -71,11 +65,22 @@ public class ReportedOverlimitTransactionController {
                 }
         );*/
          //transactionRepository.saveAll(newTransaction);
+        Errors errors = new BeanPropertyBindingResult(newTransaction, ReportedOverlimitTransaction.class.getName());
+        validator.validate(newTransaction,errors);
+        if(errors == null || errors.getAllErrors().isEmpty())
+        {
+            return transactionRepository.save(newTransaction).map(t ->
+            {ResponseEntity<ReportedOverlimitTransaction> x
+                    = ResponseEntity.status(HttpStatus.OK).body(t); return x;}).cast(ResponseEntity.class);
+        }
+        else
+            return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    errors.getAllErrors().stream().map(t -> t.getCodes()[t.getCodes().length-1]).collect(Collectors.toList())));
 
-
-        return transactionRepository.save(newTransaction).map(t ->
+        /*return transactionRepository.save(newTransaction).map(t ->
                     {ResponseEntity<ReportedOverlimitTransaction> x
-                         = ResponseEntity.status(HttpStatus.OK).body(t); return x;}).cast(ResponseEntity.class);
+                         = ResponseEntity.status(HttpStatus.OK).body(t); return x;}).cast(ResponseEntity.class);*/
+
 
         /*return newTransaction.map(t -> {t.setId( "45623"); transactionRepository.save(t);
             ResponseEntity<ReportedOverlimitTransaction> x = ResponseEntity.status(HttpStatus.OK).body(t); return x;
