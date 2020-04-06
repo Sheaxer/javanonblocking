@@ -31,11 +31,14 @@ public class ReportedOverlimitTransactionValidator implements Validator {
         ValidationUtils.rejectIfEmpty(errors,"clientId", "CLIENTID_INVALID");
         ValidationUtils.rejectIfEmpty(errors,"orderCategory","ORDERCATEGORY_INVALID");
         ValidationUtils.rejectIfEmpty(errors,"sourceAccount","SOURCEACCOUNT_INVALID");
-        ValidationUtils.invokeValidator(accountValidator,((ReportedOverlimitTransaction) o).getSourceAccount(),errors);
+        if(((ReportedOverlimitTransaction)o).getSourceAccount() != null)
+            ValidationUtils.invokeValidator(accountValidator,((ReportedOverlimitTransaction) o).getSourceAccount(),errors);
         ValidationUtils.rejectIfEmpty(errors,"clientId","CLIENTID_NOT_VALID");
         ValidationUtils.rejectIfEmpty(errors,"amount","FIELD_INVALID");
         ValidationUtils.rejectIfEmpty(errors,"vault","VAULT_INVALID");
-        ValidationUtils.invokeValidator(transferDateValidator,((ReportedOverlimitTransaction) o).getTransferDate(),errors);
+        ValidationUtils.rejectIfEmpty(errors,"transferDate","INVALID_DATE");
+        if(((ReportedOverlimitTransaction)o).getTransferDate()!=null)
+            ValidationUtils.invokeValidator(transferDateValidator,((ReportedOverlimitTransaction) o).getTransferDate(),errors);
         ValidationUtils.rejectIfEmpty(errors,"createdBy","CREATEDBY_NOT_VALID");
     }
 }
