@@ -59,37 +59,11 @@ public class ReportedOverlimitTransactionController {
     @PostMapping(value = "/reportedOverlimitTransaction", consumes = "application/json")
     public Mono<ResponseEntity> postTransaction( @RequestBody ReportedOverlimitTransaction newTransaction)
     {
-        
-        /*if(result.hasErrors())
-        {
-            log.info("AAA");
-        }*/
-        //ReportedOverlimitTransaction newTransaction = monoTransaction.block();
-        //newTransaction = newTransaction.map( t-> {t.setId("zirgon"); return t;});
-        //newTransaction.setId("A");
-        log.info("jes");
-         /*Mono<String> responseBody = Mono.just(newTransaction).map(
-                body -> {
-                    Errors errors = new BeanPropertyBindingResult(body, ReportedOverlimitTransaction.class.getName());
-                    validator.validate(body,errors);
-                    log.info("HIJA");
-                    if(errors == null || errors.getAllErrors().isEmpty())
-                    {
-                        return Mono.just(body.toString());
-                    }
-                    else
-                    {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errors.getAllErrors().toString());
-                    }
-                }
-        );*/
-         //transactionRepository.saveAll(newTransaction);
+
         Errors errors = new BeanPropertyBindingResult(newTransaction, ReportedOverlimitTransaction.class.getName());
         validator.validate(newTransaction,errors);
         if(errors == null || errors.getAllErrors().isEmpty())
         {
-
-            //List<String> customErrors = new ArrayList<>();
 
             Mono<Client> cl =clientRepository.findById(newTransaction.getClientId()).switchIfEmpty(Mono.just(new Client()));
             Mono<OrganisationUnit> o = organisationUnitRepository.findById(newTransaction.getOrganisationUnitID()).
@@ -126,25 +100,11 @@ public class ReportedOverlimitTransactionController {
 
             ).then(trans).onErrorResume(throwable -> throwable instanceof ReportedOverlimitTransactionException,
                     throwable -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(throwable.getMessage())));
-
-            //return zxcvv;
-
-
-
-
         }
 
             return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     errors.getAllErrors().stream().map(t -> t.getCodes()[t.getCodes().length-1]).collect(Collectors.toList())));
-
-        /*return transactionRepository.save(newTransaction).map(t ->
-                    {ResponseEntity<ReportedOverlimitTransaction> x
-                         = ResponseEntity.status(HttpStatus.OK).body(t); return x;}).cast(ResponseEntity.class);*/
-
-
-        /*return newTransaction.map(t -> {t.setId( "45623"); transactionRepository.save(t);
-            ResponseEntity<ReportedOverlimitTransaction> x = ResponseEntity.status(HttpStatus.OK).body(t); return x;
-        }).cast(ResponseEntity.class);*/
+        
 
     }
 
