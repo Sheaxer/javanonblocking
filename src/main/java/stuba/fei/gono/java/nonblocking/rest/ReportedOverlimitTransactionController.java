@@ -8,6 +8,9 @@ import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import stuba.fei.gono.java.errors.ReportedOverlimitTransactionException;
+import stuba.fei.gono.java.nonblocking.mongo.repositories.ClientRepository;
+import stuba.fei.gono.java.nonblocking.mongo.repositories.EmployeeRepository;
+import stuba.fei.gono.java.nonblocking.mongo.repositories.OrganisationUnitRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.ReportedOverlimitTransactionRepository;
 import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.java.validation.ReportedOverlimitTransactionValidator;
@@ -21,12 +24,21 @@ public class ReportedOverlimitTransactionController {
 
     ReportedOverlimitTransactionRepository transactionRepository;
     ReportedOverlimitTransactionValidator validator;
+    EmployeeRepository employeeRepository;
+    OrganisationUnitRepository organisationUnitRepository;
+    ClientRepository clientRepository;
 
     @Autowired
     public ReportedOverlimitTransactionController(ReportedOverlimitTransactionRepository transactionRepository,
-                                                  ReportedOverlimitTransactionValidator validator) {
+                                                  ReportedOverlimitTransactionValidator validator,
+                                                  EmployeeRepository employeeRepository,
+                                                  OrganisationUnitRepository organisationUnitRepository,
+                                                  ClientRepository clientRepository) {
         this.transactionRepository = transactionRepository;
         this.validator = validator;
+        this.employeeRepository = employeeRepository;
+        this.organisationUnitRepository = organisationUnitRepository;
+        this.clientRepository = clientRepository;
     }
 
     @GetMapping(value = "/reportedOverlimitTransaction/{id}")
@@ -69,6 +81,13 @@ public class ReportedOverlimitTransactionController {
         validator.validate(newTransaction,errors);
         if(errors == null || errors.getAllErrors().isEmpty())
         {
+            /*organisationUnitRepository.findById(newTransaction.getOrganisationUnitID()).
+                    switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ORGANISATIONUNIT_NOT_VALID")));
+            clientRepository.findById(newTransaction.getClientId()).switchIfEmpty(
+                    Mono.error(new ReportedOverlimitTransactionException("CLIENTID_NOT_VALID")));
+
+            employeeRepository.findById(newTransaction.getCreatedBy()).switchIfEmpty(
+                    Mono.error(new ReportedOverlimitTransactionException("CREATEDBY_NOT_VALID")));*/
             return transactionRepository.save(newTransaction).map(t ->
             {ResponseEntity<ReportedOverlimitTransaction> x
                     = ResponseEntity.status(HttpStatus.OK).body(t); return x;}).cast(ResponseEntity.class);

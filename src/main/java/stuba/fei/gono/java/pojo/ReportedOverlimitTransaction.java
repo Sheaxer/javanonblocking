@@ -82,6 +82,8 @@ public class ReportedOverlimitTransaction {
     @JsonSerialize(using = OrganisationUnitSerializer.class)
     private OrganisationUnit organisationUnitID;*/
 
+    private String organisationUnitID;
+
     //@DBRef
     @NotNull(message = "CREATEDBY_NOT_VALID")
     //@JsonDeserialize(using = EmployeeDeserializer.class)

@@ -40,5 +40,6 @@ public class ReportedOverlimitTransactionValidator implements Validator {
         if(((ReportedOverlimitTransaction)o).getTransferDate()!=null)
             ValidationUtils.invokeValidator(transferDateValidator,((ReportedOverlimitTransaction) o).getTransferDate(),errors);
         ValidationUtils.rejectIfEmpty(errors,"createdBy","CREATEDBY_NOT_VALID");
+        ValidationUtils.rejectIfEmpty(errors,"organisationUnitID","ORGANISATIONUNITID_NOT_VALID");
     }
 }
