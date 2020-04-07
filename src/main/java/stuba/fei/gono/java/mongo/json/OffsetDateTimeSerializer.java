@@ -30,10 +30,11 @@ public class OffsetDateTimeSerializer extends StdSerializer<OffsetDateTime> {
         log.info("I AM HERE");
         log.info(tmp);
 
-        /*if(tmp.lastIndexOf('Z') != -1)
+        if(tmp.lastIndexOf('Z') != -1)
         {
-            tmp = tmp.substring(0,tmp.lastIndexOf('.')).concat("+00:00");
+            tmp = tmp.substring(0,tmp.lastIndexOf('Z')).concat("+00:00");
         }
+        /*
         else {
             int index1 = tmp.lastIndexOf('.');
             int index2 = tmp.lastIndexOf('+');
