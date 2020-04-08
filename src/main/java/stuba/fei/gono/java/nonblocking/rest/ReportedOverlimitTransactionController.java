@@ -13,6 +13,7 @@ import stuba.fei.gono.java.nonblocking.mongo.repositories.ClientRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.EmployeeRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.OrganisationUnitRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.ReportedOverlimitTransactionRepository;
+import stuba.fei.gono.java.nonblocking.services.ReportedOverlimitTransactionService;
 import stuba.fei.gono.java.pojo.Client;
 import stuba.fei.gono.java.pojo.Employee;
 import stuba.fei.gono.java.pojo.OrganisationUnit;
@@ -35,17 +36,21 @@ public class ReportedOverlimitTransactionController {
     OrganisationUnitRepository organisationUnitRepository;
     ClientRepository clientRepository;
 
+    private ReportedOverlimitTransactionService transactionService;
+
     @Autowired
     public ReportedOverlimitTransactionController(ReportedOverlimitTransactionRepository transactionRepository,
                                                   ReportedOverlimitTransactionValidator validator,
                                                   EmployeeRepository employeeRepository,
                                                   OrganisationUnitRepository organisationUnitRepository,
-                                                  ClientRepository clientRepository) {
+                                                  ClientRepository clientRepository,
+                                                  ReportedOverlimitTransactionService transactionService) {
         this.transactionRepository = transactionRepository;
         this.validator = validator;
         this.employeeRepository = employeeRepository;
         this.organisationUnitRepository = organisationUnitRepository;
         this.clientRepository = clientRepository;
+        this.transactionService = transactionService;
     }
 
     @GetMapping(value = "/reportedOverlimitTransaction/{id}")
@@ -60,7 +65,7 @@ public class ReportedOverlimitTransactionController {
     public Mono<ResponseEntity> postTransaction( @RequestBody ReportedOverlimitTransaction newTransaction)
     {
 
-        Errors errors = new BeanPropertyBindingResult(newTransaction, ReportedOverlimitTransaction.class.getName());
+        /*Errors errors = new BeanPropertyBindingResult(newTransaction, ReportedOverlimitTransaction.class.getName());
         validator.validate(newTransaction,errors);
         if(errors == null || errors.getAllErrors().isEmpty())
         {
@@ -104,8 +109,14 @@ public class ReportedOverlimitTransactionController {
 
             return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     errors.getAllErrors().stream().map(t -> t.getCodes()[t.getCodes().length-1]).collect(Collectors.toList())));
-        
 
+         */
+
+      return  transactionService.postTransaction(newTransaction).map(
+                t->
+                        ResponseEntity.status(HttpStatus.OK).body(t)
+        ).cast(ResponseEntity.class).onErrorResume(throwable -> throwable instanceof ReportedOverlimitTransactionException,
+              throwable -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(throwable.getMessage())));
     }
 
 }

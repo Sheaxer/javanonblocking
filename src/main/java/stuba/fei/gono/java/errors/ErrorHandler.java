@@ -69,10 +69,10 @@ public class ErrorHandler {
         return "MEDIATYPE_INVALID";
     }*/
 
-    @ExceptionHandler(java.lang.IllegalArgumentException.class)
+    /*@ExceptionHandler(java.lang.IllegalArgumentException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleIllegalArgument(java.lang.IllegalArgumentException e) {
         return "ILLEGAL_ARGUMENT";
-    }
+    }*/
 }
