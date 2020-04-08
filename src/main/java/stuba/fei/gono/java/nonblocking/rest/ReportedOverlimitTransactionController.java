@@ -31,34 +31,24 @@ import java.util.stream.Collectors;
 public class ReportedOverlimitTransactionController {
 
     ReportedOverlimitTransactionRepository transactionRepository;
-    ReportedOverlimitTransactionValidator validator;
-    EmployeeRepository employeeRepository;
-    OrganisationUnitRepository organisationUnitRepository;
-    ClientRepository clientRepository;
+
 
     private ReportedOverlimitTransactionService transactionService;
 
     @Autowired
-    public ReportedOverlimitTransactionController(ReportedOverlimitTransactionRepository transactionRepository,
-                                                  ReportedOverlimitTransactionValidator validator,
-                                                  EmployeeRepository employeeRepository,
-                                                  OrganisationUnitRepository organisationUnitRepository,
-                                                  ClientRepository clientRepository,
-                                                  ReportedOverlimitTransactionService transactionService) {
-        this.transactionRepository = transactionRepository;
-        this.validator = validator;
-        this.employeeRepository = employeeRepository;
-        this.organisationUnitRepository = organisationUnitRepository;
-        this.clientRepository = clientRepository;
+    public ReportedOverlimitTransactionController(ReportedOverlimitTransactionService transactionService) {
+
         this.transactionService = transactionService;
     }
 
     @GetMapping(value = "/reportedOverlimitTransaction/{id}")
     @ResponseBody
-    public Mono<ReportedOverlimitTransaction> getTransaction (@PathVariable String id)
+    public Mono<ResponseEntity> getTransaction (@PathVariable String id)
     {
-        return transactionRepository.findById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_INVALID")));
-
+        //return transactionRepository.findById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_INVALID")));
+        return transactionService.getTransactionById(id).map(
+                t -> ResponseEntity.status(HttpStatus.OK).body(t)
+        ).cast(ResponseEntity.class);
     }
 
     @PostMapping(value = "/reportedOverlimitTransaction", consumes = "application/json")

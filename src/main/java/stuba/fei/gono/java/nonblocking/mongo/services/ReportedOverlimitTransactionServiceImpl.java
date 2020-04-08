@@ -83,7 +83,11 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
 
     @Override
     public Mono<ReportedOverlimitTransaction> getTransactionById(String id) {
-        return null;
+
+        return transactionRepository.findById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_NOT_FOUND")));
+
+
+
     }
 
     @Override
