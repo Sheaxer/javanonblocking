@@ -22,6 +22,7 @@ import stuba.fei.gono.java.validation.ReportedOverlimitTransactionValidator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -60,7 +61,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
         validator.validate(transaction,errors);
 
-        if(errors == null || errors.getAllErrors().isEmpty())
+        if(errors.getAllErrors().isEmpty())
         {
 
             return  test(transaction).then(nextSequenceService.getNewId(transactionRepository,sequenceName).flatMap(
@@ -75,7 +76,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         {
             throw new ReportedOverlimitTransactionException(errors.getAllErrors().stream().map(
                     t->
-                            t.getCodes()[t.getCodes().length-1]
+                            Objects.requireNonNull(t.getCodes())[t.getCodes().length-1]
 
             ).collect(Collectors.toList()).toString());
         }
@@ -96,7 +97,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
         validator.validate(transaction,errors);
 
-        if(errors == null || errors.getAllErrors().isEmpty())
+        if(errors.getAllErrors().isEmpty())
         {
 
                   return  test(transaction).then(transactionRepository.save(transaction));
@@ -105,7 +106,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         {
             throw new ReportedOverlimitTransactionException(errors.getAllErrors().stream().map(
                     t->
-                            t.getCodes()[t.getCodes().length-1]
+                            Objects.requireNonNull(t.getCodes())[t.getCodes().length-1]
 
             ).collect(Collectors.toList()).toString());
         }
@@ -122,7 +123,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                 switchIfEmpty(Mono.just(new Employee()));
 
         Mono<Tuple3<Client,OrganisationUnit,Employee>> tup= Mono.zip(cl,o,emp);
-        Mono<Object> test = tup.map(
+        return tup.map(
                 x ->
                 {
                     List<String> customErrors = new ArrayList<>();
@@ -142,7 +143,6 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                 }
 
         );
-        return test;
     }
 
     @Override
