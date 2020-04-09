@@ -6,8 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import stuba.fei.gono.java.errors.ReportedOverlimitTransactionException;
-import stuba.fei.gono.java.nonblocking.mongo.repositories.ReportedOverlimitTransactionRepository;
+import stuba.fei.gono.java.errors.ReportedOverlimitTransactionValidationException;
 import stuba.fei.gono.java.nonblocking.services.ReportedOverlimitTransactionService;
 import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
 
@@ -15,9 +14,6 @@ import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
 @RestController
 //@RequestMapping(value = "/reportedOverlimitTransaction")
 public class ReportedOverlimitTransactionController {
-
-    ReportedOverlimitTransactionRepository transactionRepository;
-
 
     private ReportedOverlimitTransactionService transactionService;
 
@@ -91,8 +87,8 @@ public class ReportedOverlimitTransactionController {
       return  transactionService.postTransaction(newTransaction).map(
                 t->
                         ResponseEntity.status(HttpStatus.OK).body(t)
-        ).cast(ResponseEntity.class).onErrorResume(throwable -> throwable instanceof ReportedOverlimitTransactionException,
-              throwable -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(throwable.getMessage())));
+        ).cast(ResponseEntity.class).onErrorResume(throwable -> throwable instanceof ReportedOverlimitTransactionValidationException,
+              throwable -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(((ReportedOverlimitTransactionValidationException)throwable).getErrors())));
     }
 
 }

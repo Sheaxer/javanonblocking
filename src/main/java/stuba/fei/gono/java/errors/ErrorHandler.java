@@ -24,12 +24,6 @@ public class ErrorHandler {
         return new ArrayList<>(Collections.singleton(ex.getMessage()));
     }
 
-    @ExceptionHandler(CreateReportedOverlimitTransactionException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String postException(Exception ex) {
-        return ex.getMessage();
-    }
 
     /***
      * Transforms validation errors into JSON array
@@ -51,6 +45,14 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException ex) {
         return ex.getMessage();
+    }
+
+    @ExceptionHandler(ReportedOverlimitTransactionValidationException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public List<String> handleReportedOverlimitTransactionValidationException(ReportedOverlimitTransactionValidationException e)
+    {
+        return e.getErrors();
     }
 
     /*@ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)

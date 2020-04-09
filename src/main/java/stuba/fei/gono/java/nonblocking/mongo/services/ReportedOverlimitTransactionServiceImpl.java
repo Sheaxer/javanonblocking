@@ -9,6 +9,7 @@ import org.springframework.validation.Errors;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple3;
 import stuba.fei.gono.java.errors.ReportedOverlimitTransactionException;
+import stuba.fei.gono.java.errors.ReportedOverlimitTransactionValidationException;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.ClientRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.EmployeeRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.OrganisationUnitRepository;
@@ -74,11 +75,11 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         }
         else
         {
-            throw new ReportedOverlimitTransactionException(errors.getAllErrors().stream().map(
+            throw new ReportedOverlimitTransactionValidationException(errors.getAllErrors().stream().map(
                     t->
                             Objects.requireNonNull(t.getCodes())[t.getCodes().length-1]
 
-            ).collect(Collectors.toList()).toString());
+            ).collect(Collectors.toList()));
         }
     }
 
@@ -104,11 +105,11 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         }
         else
         {
-            throw new ReportedOverlimitTransactionException(errors.getAllErrors().stream().map(
+            throw new ReportedOverlimitTransactionValidationException(errors.getAllErrors().stream().map(
                     t->
                             Objects.requireNonNull(t.getCodes())[t.getCodes().length-1]
 
-            ).collect(Collectors.toList()).toString());
+            ).collect(Collectors.toList()));
         }
 
 
@@ -139,7 +140,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                         return Mono.empty();
                     }
                     else
-                        throw new ReportedOverlimitTransactionException(customErrors.toString());
+                        throw new ReportedOverlimitTransactionValidationException(customErrors);
                 }
 
         );
