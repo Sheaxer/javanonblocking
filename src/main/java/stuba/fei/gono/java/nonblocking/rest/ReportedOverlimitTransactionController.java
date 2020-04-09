@@ -25,70 +25,41 @@ public class ReportedOverlimitTransactionController {
 
     @GetMapping(value = "/reportedOverlimitTransaction/{id}")
     @ResponseBody
-    public Mono<ResponseEntity> getTransaction (@PathVariable String id)
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<ReportedOverlimitTransaction> getTransaction (@PathVariable String id)
     {
-        //return transactionRepository.findById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_INVALID")));
-        return transactionService.getTransactionById(id).map(
-                t -> ResponseEntity.status(HttpStatus.OK).body(t)
-        ).cast(ResponseEntity.class);
+        return transactionService.getTransactionById(id);
     }
 
     @PostMapping(value = "/reportedOverlimitTransaction", consumes = "application/json")
-    public Mono<ResponseEntity> postTransaction( @RequestBody ReportedOverlimitTransaction newTransaction)
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<ReportedOverlimitTransaction> postTransaction( @RequestBody ReportedOverlimitTransaction newTransaction)
     {
 
-        /*Errors errors = new BeanPropertyBindingResult(newTransaction, ReportedOverlimitTransaction.class.getName());
-        validator.validate(newTransaction,errors);
-        if(errors == null || errors.getAllErrors().isEmpty())
-        {
+      return  transactionService.postTransaction(newTransaction);
+              /*.onErrorResume(throwable -> throwable instanceof ReportedOverlimitTransactionValidationException,
+              throwable -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                      ((ReportedOverlimitTransactionValidationException)throwable).getErrors()))
+      );*/
+    }
 
-            Mono<Client> cl =clientRepository.findById(newTransaction.getClientId()).switchIfEmpty(Mono.just(new Client()));
-            Mono<OrganisationUnit> o = organisationUnitRepository.findById(newTransaction.getOrganisationUnitID()).
-                    switchIfEmpty(Mono.just(new OrganisationUnit()));
-            Mono<Employee> emp = employeeRepository.findById(newTransaction.getCreatedBy()).
-                    switchIfEmpty(Mono.just(new Employee()));
+    @PutMapping(value = "/reportedOverlimitTransaction/{id}", consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<ReportedOverlimitTransaction> putTransaction(@PathVariable String id, @RequestBody ReportedOverlimitTransaction transaction)
+    {
+        return transactionService.putTransaction(id, transaction);
+        /*.onErrorResume(
+                throwable -> throwable instanceof ReportedOverlimitTransactionValidationException,
+                throwable -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        ((ReportedOverlimitTransactionValidationException)throwable).getErrors()))
+        );*/
+    }
 
-            Mono<ResponseEntity> trans = transactionRepository.save(newTransaction).map(t ->
-            {ResponseEntity<ReportedOverlimitTransaction> x
-                    = ResponseEntity.status(HttpStatus.OK).body(t); return x;}).cast(ResponseEntity.class);
-
-
-
-           Mono<Tuple3<Client,OrganisationUnit,Employee>> tup= Mono.zip(cl,o,emp);
-
-            return tup.map(
-                    x ->
-                    {
-                        List<String> customErrors = new ArrayList<>();
-                        if(x.getT1().getId() == null)
-                            customErrors.add("CLIENTID_NOT_VALID");
-                        if(x.getT2().getId() == null)
-                            customErrors.add("ORGANISATIONUNIT_NOT_VALID");
-                        if(x.getT3().getId() == null)
-                            customErrors.add("CREATEDBY_NOT_VALID");
-
-                        if(customErrors.isEmpty())
-                        {
-                            return Mono.empty();
-                        }
-                        else
-                            throw new ReportedOverlimitTransactionException(customErrors.toString());
-                    }
-
-            ).then(trans).onErrorResume(throwable -> throwable instanceof ReportedOverlimitTransactionException,
-                    throwable -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(throwable.getMessage())));
-        }
-
-            return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    errors.getAllErrors().stream().map(t -> t.getCodes()[t.getCodes().length-1]).collect(Collectors.toList())));
-
-         */
-
-      return  transactionService.postTransaction(newTransaction).map(
-                t->
-                        ResponseEntity.status(HttpStatus.OK).body(t)
-        ).cast(ResponseEntity.class).onErrorResume(throwable -> throwable instanceof ReportedOverlimitTransactionValidationException,
-              throwable -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(((ReportedOverlimitTransactionValidationException)throwable).getErrors())));
+    @DeleteMapping(value = "/reportedOverlimitTransaction/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> deleteTransaction(@PathVariable String id)
+    {
+       return  transactionService.deleteTransaction(id);
     }
 
 }

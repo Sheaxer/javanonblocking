@@ -33,7 +33,6 @@ public class ReportedOverlimitTransactionValidator implements Validator {
         ValidationUtils.rejectIfEmpty(errors,"sourceAccount","SOURCEACCOUNT_INVALID");
         if(((ReportedOverlimitTransaction)o).getSourceAccount() != null)
             ValidationUtils.invokeValidator(accountValidator,((ReportedOverlimitTransaction) o).getSourceAccount(),errors);
-        ValidationUtils.rejectIfEmpty(errors,"clientId","CLIENTID_NOT_VALID");
         ValidationUtils.rejectIfEmpty(errors,"amount","FIELD_INVALID");
         ValidationUtils.rejectIfEmpty(errors,"vault","VAULT_INVALID");
         ValidationUtils.rejectIfEmpty(errors,"transferDate","INVALID_DATE");

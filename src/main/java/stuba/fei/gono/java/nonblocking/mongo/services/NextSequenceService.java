@@ -6,8 +6,8 @@ import com.mongodb.client.model.Projections;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -26,24 +26,26 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 @Slf4j
 @Service
 public class NextSequenceService {
+    private final ReactiveMongoOperations reactiveMongoOperations;
     private final MongoOperations mongoOperations;
 
-    public NextSequenceService(MongoOperations mongoOperations) {
+    public NextSequenceService(ReactiveMongoOperations reactiveMongoOperations, MongoOperations mongoOperations) {
+        this.reactiveMongoOperations = reactiveMongoOperations;
         this.mongoOperations = mongoOperations;
     }
 
-    public String getNextSequence(@NotNull String seqName)
+    public Mono<String> getNextSequence(@NotNull String seqName)
     {
-        SequenceId counter = mongoOperations.findAndModify(
+        Mono<SequenceId> counter = reactiveMongoOperations.findAndModify(
                 query(where("_id").is(seqName)),
                 new Update().inc("seq",1),
                 options().returnNew(true).upsert(true),
-                SequenceId.class);
-        if(counter == null)
+                SequenceId.class).switchIfEmpty(setNextSequence(seqName,"1"));
+        /*if(counter == null)
         {
             setNextSequence(seqName,String.valueOf(1));
             return "1";
-        }
+        }*/
         /*if(counter == null)
         {
             log.info("doing new");
@@ -51,7 +53,9 @@ public class NextSequenceService {
             return "1";
         }*/
 
-        return String.valueOf( counter.getSeq());
+        return counter.map(
+                t-> String.valueOf(t.getSeq())
+        ).cast(String.class);
     }
 
     /***
@@ -59,9 +63,9 @@ public class NextSequenceService {
      * @param seqName name of the sequence
      * @param value value that the sequence will be set to
      */
-    public void setNextSequence(@NotNull String seqName,@NotNull String value)
+    public Mono<SequenceId> setNextSequence(@NotNull String seqName,@NotNull String value)
     {
-        SequenceId s = mongoOperations.findAndModify(
+        return reactiveMongoOperations.findAndModify(
                 query(where("_id").is(seqName)),
                 new Update().set("seq",Long.valueOf(value)),
                 options().returnNew(true).upsert(true),
@@ -77,7 +81,7 @@ public class NextSequenceService {
     {
 
 
-       return Mono.just(this.getNextSequence(sequenceName)).flatMap(
+       return this.getNextSequence(sequenceName).flatMap(
                 e ->
                         rep.existsById(e).map(
                                   t ->
@@ -95,7 +99,7 @@ public class NextSequenceService {
                                           else if (rep instanceof OrganisationUnitRepository)
                                               tmpId = lastId(OrganisationUnit.class);
                                           //newId = this.getNextSequence(sequenceName);
-                                          this.setNextSequence(sequenceName, tmpId);
+                                          this.setNextSequence(sequenceName, tmpId).subscribe();
                                           log.info("wasModified");
                                           return tmpId;
                                       } else
@@ -103,9 +107,6 @@ public class NextSequenceService {
                                   }
                           ).cast(String.class)
         );
-
-
-
     }
 
     public String lastId(@NotNull Class<?> rep)

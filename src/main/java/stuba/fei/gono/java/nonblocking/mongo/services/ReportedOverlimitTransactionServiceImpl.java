@@ -130,6 +130,8 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                 switchIfEmpty(Mono.just(new Employee()));
 
         Mono<Tuple3<Client,OrganisationUnit,Employee>> tup= Mono.zip(cl,o,emp);
+
+
         return tup.map(
                 x ->
                 {
@@ -153,11 +155,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     }
 
     @Override
-    public Mono<ReportedOverlimitTransaction> deleteTransaction(String id) {
-     /*return  getTransactionById(id).zipWhen(t-> transactionRepository.deleteById(t.getId())).map(
-             Tuple2::getT1
-       );*/
-
-      return null;
+    public Mono<Void> deleteTransaction(String id) {
+      return getTransactionById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_NOT_FOUND"))).then(transactionRepository.deleteById(id));
     }
 }
