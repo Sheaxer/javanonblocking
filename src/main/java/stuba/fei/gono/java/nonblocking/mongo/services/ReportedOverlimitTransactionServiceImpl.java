@@ -1,6 +1,7 @@
 package stuba.fei.gono.java.nonblocking.mongo.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.reactivestreams.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import stuba.fei.gono.java.pojo.OrganisationUnit;
 import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.java.validation.ReportedOverlimitTransactionValidator;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -59,6 +61,8 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
 
     @Override
     public Mono<ReportedOverlimitTransaction> postTransaction(ReportedOverlimitTransaction transaction) {
+        transaction.setModificationDate(OffsetDateTime.now());
+        transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
         Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
         validator.validate(transaction,errors);
 
@@ -95,6 +99,8 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     @Override
     public Mono<ReportedOverlimitTransaction> putTransaction(String id, ReportedOverlimitTransaction transaction) {
         transaction.setId(id);
+        transaction.setModificationDate(OffsetDateTime.now());
+        transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
         Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
         validator.validate(transaction,errors);
 
@@ -148,6 +154,10 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
 
     @Override
     public Mono<ReportedOverlimitTransaction> deleteTransaction(String id) {
-        return null;
+     /*return  getTransactionById(id).zipWhen(t-> transactionRepository.deleteById(t.getId())).map(
+             Tuple2::getT1
+       );*/
+
+      return null;
     }
 }
