@@ -8,12 +8,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import stuba.fei.gono.java.mongo.converters.OffsetDateTimeDeserializer;
+import stuba.fei.gono.java.mongo.json.OffsetDateTimeDeserializer;
 import stuba.fei.gono.java.mongo.json.*;
 import stuba.fei.gono.java.validation.annotations.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
