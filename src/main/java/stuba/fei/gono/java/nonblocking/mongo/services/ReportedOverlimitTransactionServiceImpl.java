@@ -63,7 +63,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     public Mono<ReportedOverlimitTransaction> postTransaction(ReportedOverlimitTransaction transaction) {
         transaction.setModificationDate(OffsetDateTime.now());
         transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
-        Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
+       /* Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
         validator.validate(transaction,errors);
 
         if(errors.getAllErrors().isEmpty())
@@ -84,7 +84,14 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                             Objects.requireNonNull(t.getCodes())[t.getCodes().length-1]
 
             ).collect(Collectors.toList()));
-        }
+        }*/
+        return  test(transaction).then(nextSequenceService.getNewId(transactionRepository,sequenceName).flatMap(
+                newId ->
+                {
+                    transaction.setId(newId);
+                    return transactionRepository.save(transaction);
+                }
+        ).cast(ReportedOverlimitTransaction.class));
     }
 
     @Override
@@ -101,7 +108,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         transaction.setId(id);
         transaction.setModificationDate(OffsetDateTime.now());
         transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
-        Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
+        /*Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
         validator.validate(transaction,errors);
 
         if(errors.getAllErrors().isEmpty())
@@ -116,46 +123,59 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                             Objects.requireNonNull(t.getCodes())[t.getCodes().length-1]
 
             ).collect(Collectors.toList()));
-        }
+        }*/
+        return test(transaction).then(transactionRepository.save(transaction));
 
 
     }
 
-    private Mono<Object> test(ReportedOverlimitTransaction transaction)
+    private Mono<Void> test(ReportedOverlimitTransaction transaction)
     {
-        Mono<Client> cl =clientRepository.findById(transaction.getClientId()).switchIfEmpty(Mono.just(new Client()));
-        Mono<OrganisationUnit> o = organisationUnitRepository.findById(transaction.getOrganisationUnitID()).
-                switchIfEmpty(Mono.just(new OrganisationUnit()));
-        Mono<Employee> emp = employeeRepository.findById(transaction.getCreatedBy()).
-                switchIfEmpty(Mono.just(new Employee()));
-
-        Mono<Tuple3<Client,OrganisationUnit,Employee>> tup= Mono.zip(cl,o,emp);
+        Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
+        validator.validate(transaction,errors);
+        if(errors.getAllErrors().isEmpty()) {
 
 
-        return tup.map(
-                x ->
-                {
-                    List<String> customErrors = new ArrayList<>();
-                    if(x.getT1().getId() == null)
-                        customErrors.add("CLIENTID_NOT_VALID");
-                    if(x.getT2().getId() == null)
-                        customErrors.add("ORGANISATIONUNIT_NOT_VALID");
-                    if(x.getT3().getId() == null)
-                        customErrors.add("CREATEDBY_NOT_VALID");
+            Mono<Boolean> cl = clientRepository.existsById(transaction.getClientId());
+            Mono<Boolean> o = organisationUnitRepository.existsById(transaction.getOrganisationUnitID());
+            Mono<Boolean> emp = employeeRepository.existsById(transaction.getCreatedBy());
 
-                    if(customErrors.isEmpty())
+            Mono<Tuple3<Boolean, Boolean, Boolean>> tup = Mono.zip(cl, o, emp);
+
+
+            return tup.map(
+                    x ->
                     {
-                        return Mono.empty();
-                    }
-                    else
-                        throw new ReportedOverlimitTransactionValidationException(customErrors);
-                }
+                        List<String> customErrors = new ArrayList<>();
+                        if (!x.getT1())
+                            customErrors.add("CLIENTID_NOT_VALID");
+                        if (!x.getT2())
+                            customErrors.add("ORGANISATIONUNIT_NOT_VALID");
+                        if (!x.getT3())
+                            customErrors.add("CREATEDBY_NOT_VALID");
 
-        );
+                        if (customErrors.isEmpty()) {
+                            return true;
+                        } else
+                            throw new ReportedOverlimitTransactionValidationException(customErrors);
+                    }
+
+            ).then();
+        }
+        else
+        {
+            throw new ReportedOverlimitTransactionValidationException(errors.getAllErrors().stream().map(
+                    t->
+                            Objects.requireNonNull(t.getCodes())[t.getCodes().length-1]
+
+            ).collect(Collectors.toList()));
+        }
+
     }
 
     @Override
     public Mono<Void> deleteTransaction(String id) {
-      return getTransactionById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_NOT_FOUND"))).then(transactionRepository.deleteById(id));
+      return getTransactionById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_NOT_FOUND"))).
+              then(transactionRepository.deleteById(id));
     }
 }
