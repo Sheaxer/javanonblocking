@@ -1,7 +1,6 @@
 package stuba.fei.gono.java.nonblocking.mongo.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.reactivestreams.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,15 +9,12 @@ import org.springframework.validation.Errors;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple3;
 import stuba.fei.gono.java.errors.ReportedOverlimitTransactionException;
-import stuba.fei.gono.java.errors.ReportedOverlimitTransactionValidationException;
+import stuba.fei.gono.java.nonblocking.errors.ReportedOverlimitTransactionValidationException;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.ClientRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.EmployeeRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.OrganisationUnitRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.ReportedOverlimitTransactionRepository;
 import stuba.fei.gono.java.nonblocking.services.ReportedOverlimitTransactionService;
-import stuba.fei.gono.java.pojo.Client;
-import stuba.fei.gono.java.pojo.Employee;
-import stuba.fei.gono.java.pojo.OrganisationUnit;
 import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.java.validation.ReportedOverlimitTransactionValidator;
 

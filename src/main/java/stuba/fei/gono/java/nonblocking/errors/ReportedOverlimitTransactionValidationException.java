@@ -1,4 +1,4 @@
-package stuba.fei.gono.java.errors;
+package stuba.fei.gono.java.nonblocking.errors;
 
 import java.util.ArrayList;
 import java.util.List;

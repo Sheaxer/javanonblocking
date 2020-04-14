@@ -1,4 +1,4 @@
-package stuba.fei.gono.java.errors;
+package stuba.fei.gono.java.nonblocking.errors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.ObjectError;
@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import reactor.core.publisher.Mono;
+import stuba.fei.gono.java.errors.ReportedOverlimitTransactionException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,26 +35,30 @@ public class ErrorHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return ex.getBindingResult()
+    public Mono<List<String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        return Mono.just(
+                ex.getBindingResult()
                 .getAllErrors().stream()
-                .map(ObjectError::getDefaultMessage)
-                .collect(Collectors.toList());
+                .map(ObjectError::getDefaultMessage).collect(Collectors.toList())
+               );
     }
 
     @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException ex) {
-        return ex.getMessage();
+    public Mono<String> handleMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException ex) {
+        return Mono.just(ex.getMessage());
     }
 
     @ExceptionHandler(ReportedOverlimitTransactionValidationException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<String> handleReportedOverlimitTransactionValidationException(ReportedOverlimitTransactionValidationException e)
+    public Mono<List<String>> handleReportedOverlimitTransactionValidationException(ReportedOverlimitTransactionValidationException e)
     {
-        return e.getErrors();
+        return Mono.just(
+                        e.getErrors()
+        );
+        //return e.getErrors();
     }
 
     /*@ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
