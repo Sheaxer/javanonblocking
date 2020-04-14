@@ -1,4 +1,4 @@
-package stuba.fei.gono.java.validation;
+package stuba.fei.gono.java.nonblocking.validation;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

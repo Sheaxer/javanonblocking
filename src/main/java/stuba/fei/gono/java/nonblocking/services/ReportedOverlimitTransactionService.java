@@ -2,7 +2,7 @@ package stuba.fei.gono.java.nonblocking.services;
 
 
 import reactor.core.publisher.Mono;
-import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
+import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 
 
 public interface ReportedOverlimitTransactionService {

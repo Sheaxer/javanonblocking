@@ -15,6 +15,7 @@ import stuba.fei.gono.java.nonblocking.mongo.repositories.ClientRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.EmployeeRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.OrganisationUnitRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.ReportedOverlimitTransactionRepository;
+import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.java.pojo.*;
 
 import javax.validation.constraints.NotNull;

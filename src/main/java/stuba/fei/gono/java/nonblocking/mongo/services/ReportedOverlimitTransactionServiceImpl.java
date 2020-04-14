@@ -15,8 +15,8 @@ import stuba.fei.gono.java.nonblocking.mongo.repositories.EmployeeRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.OrganisationUnitRepository;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.ReportedOverlimitTransactionRepository;
 import stuba.fei.gono.java.nonblocking.services.ReportedOverlimitTransactionService;
-import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
-import stuba.fei.gono.java.validation.ReportedOverlimitTransactionValidator;
+import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
+import stuba.fei.gono.java.nonblocking.validation.ReportedOverlimitTransactionValidator;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     @Override
     public Mono<ReportedOverlimitTransaction> postTransaction(ReportedOverlimitTransaction transaction) {
         transaction.setModificationDate(OffsetDateTime.now());
-        transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
+        //transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
 
         return  test(transaction).then(nextSequenceService.getNewId(transactionRepository,sequenceName).flatMap(
                 newId ->
@@ -78,7 +78,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     public Mono<ReportedOverlimitTransaction> putTransaction(String id, ReportedOverlimitTransaction transaction) {
         transaction.setId(id);
         transaction.setModificationDate(OffsetDateTime.now());
-        transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
+        //transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
         return test(transaction).then(transactionRepository.save(transaction));
 
 

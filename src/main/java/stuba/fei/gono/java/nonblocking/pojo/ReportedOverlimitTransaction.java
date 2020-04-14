@@ -1,4 +1,4 @@
-package stuba.fei.gono.java.pojo;
+package stuba.fei.gono.java.nonblocking.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,8 +8,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import stuba.fei.gono.java.mongo.json.OffsetDateTimeDeserializer;
 import stuba.fei.gono.java.mongo.json.*;
+import stuba.fei.gono.java.pojo.*;
 import stuba.fei.gono.java.validation.annotations.*;
 
 import javax.validation.constraints.*;
@@ -21,6 +23,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Document
 public class ReportedOverlimitTransaction {
 
     @Id
@@ -64,6 +67,11 @@ public class ReportedOverlimitTransaction {
         return this.modificationDate;
     }
 
+    public void setModificationDate(OffsetDateTime modificationDate) {
+        this.modificationDate = modificationDate;
+        this.zoneOffset = modificationDate.getOffset().getId();
+    }
+
     //@Past(message = "INVALID_DATE_IN_PAST")
     //@BankingDay(message = "INVALID_DATE")
     @NotNull
@@ -75,11 +83,11 @@ public class ReportedOverlimitTransaction {
     private String note;
 
     /*@DBRef
-    @NotNull(message = "ORGANISATIONUNITID_NOT_VALID")
+
     @JsonDeserialize(using = OrganisationUnitDeserializer.class)
     @JsonSerialize(using = OrganisationUnitSerializer.class)
     private OrganisationUnit organisationUnitID;*/
-
+    @NotNull(message = "ORGANISATIONUNITID_NOT_VALID")
     private String organisationUnitID;
 
     //@DBRef

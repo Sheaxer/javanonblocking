@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import stuba.fei.gono.java.nonblocking.services.ReportedOverlimitTransactionService;
-import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
+import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 
 @Slf4j
 @RestController

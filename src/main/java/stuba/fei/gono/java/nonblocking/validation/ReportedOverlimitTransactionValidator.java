@@ -1,12 +1,11 @@
-package stuba.fei.gono.java.validation;
+package stuba.fei.gono.java.nonblocking.validation;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import stuba.fei.gono.java.pojo.ReportedOverlimitTransaction;
+import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 
 @Component
 public class ReportedOverlimitTransactionValidator implements Validator {
