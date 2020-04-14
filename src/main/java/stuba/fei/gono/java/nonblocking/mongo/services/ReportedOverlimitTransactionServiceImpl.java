@@ -63,28 +63,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     public Mono<ReportedOverlimitTransaction> postTransaction(ReportedOverlimitTransaction transaction) {
         transaction.setModificationDate(OffsetDateTime.now());
         transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
-       /* Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
-        validator.validate(transaction,errors);
 
-        if(errors.getAllErrors().isEmpty())
-        {
-
-            return  test(transaction).then(nextSequenceService.getNewId(transactionRepository,sequenceName).flatMap(
-                    newId ->
-                    {
-                        transaction.setId(newId);
-                        return transactionRepository.save(transaction);
-                    }
-            ).cast(ReportedOverlimitTransaction.class));
-        }
-        else
-        {
-            throw new ReportedOverlimitTransactionValidationException(errors.getAllErrors().stream().map(
-                    t->
-                            Objects.requireNonNull(t.getCodes())[t.getCodes().length-1]
-
-            ).collect(Collectors.toList()));
-        }*/
         return  test(transaction).then(nextSequenceService.getNewId(transactionRepository,sequenceName).flatMap(
                 newId ->
                 {
@@ -96,11 +75,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
 
     @Override
     public Mono<ReportedOverlimitTransaction> getTransactionById(String id) {
-
         return transactionRepository.findById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_NOT_FOUND")));
-
-
-
     }
 
     @Override
@@ -108,22 +83,6 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         transaction.setId(id);
         transaction.setModificationDate(OffsetDateTime.now());
         transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
-        /*Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
-        validator.validate(transaction,errors);
-
-        if(errors.getAllErrors().isEmpty())
-        {
-
-                  return  test(transaction).then(transactionRepository.save(transaction));
-        }
-        else
-        {
-            throw new ReportedOverlimitTransactionValidationException(errors.getAllErrors().stream().map(
-                    t->
-                            Objects.requireNonNull(t.getCodes())[t.getCodes().length-1]
-
-            ).collect(Collectors.toList()));
-        }*/
         return test(transaction).then(transactionRepository.save(transaction));
 
 
@@ -131,17 +90,14 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
 
     private Mono<Void> test(ReportedOverlimitTransaction transaction)
     {
-        Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
+       Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
         validator.validate(transaction,errors);
         if(errors.getAllErrors().isEmpty()) {
-
-
             Mono<Boolean> cl = clientRepository.existsById(transaction.getClientId());
             Mono<Boolean> o = organisationUnitRepository.existsById(transaction.getOrganisationUnitID());
             Mono<Boolean> emp = employeeRepository.existsById(transaction.getCreatedBy());
 
             Mono<Tuple3<Boolean, Boolean, Boolean>> tup = Mono.zip(cl, o, emp);
-
 
             return tup.map(
                     x ->
@@ -164,11 +120,11 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         }
         else
         {
-            throw new ReportedOverlimitTransactionValidationException(errors.getAllErrors().stream().map(
+            return Mono.error( new ReportedOverlimitTransactionValidationException(errors.getAllErrors().stream().map(
                     t->
                             Objects.requireNonNull(t.getCodes())[t.getCodes().length-1]
 
-            ).collect(Collectors.toList()));
+            ).collect(Collectors.toList())));
         }
 
     }
