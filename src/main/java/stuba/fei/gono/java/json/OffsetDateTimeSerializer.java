@@ -1,4 +1,4 @@
-package stuba.fei.gono.java.mongo.json;
+package stuba.fei.gono.java.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

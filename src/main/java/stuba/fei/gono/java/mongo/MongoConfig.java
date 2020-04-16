@@ -6,8 +6,6 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import stuba.fei.gono.java.mongo.converters.OffsetDateTimeReadConverter;
 import stuba.fei.gono.java.mongo.converters.OffsetDateTimeWriteConverter;
-import stuba.fei.gono.java.mongo.converters.ZonedDateTimeReadConverter;
-import stuba.fei.gono.java.mongo.converters.ZonedDateTimeWriteConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +28,6 @@ public class MongoConfig  {
     public MongoCustomConversions customConversions()
     {
         List<Converter<?,?>> converters = new ArrayList<>();
-        converters.add(new ZonedDateTimeReadConverter());
-        converters.add(new ZonedDateTimeWriteConverter());
         converters.add(new OffsetDateTimeReadConverter());
         converters.add(new OffsetDateTimeWriteConverter());
         return new MongoCustomConversions(converters);
