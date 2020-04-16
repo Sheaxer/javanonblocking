@@ -9,5 +9,5 @@ import stuba.fei.gono.java.pojo.Employee;
 @Repository
 public interface EmployeeRepository extends ReactiveMongoRepository<Employee, String> {
 
-    Mono<Employee> findByUserName(String userName);
+    Mono<Employee> findByUsername(String userName);
 }
