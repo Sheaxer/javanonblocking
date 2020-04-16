@@ -10,6 +10,8 @@ public interface EmployeeService {
 
     Mono<Employee> findEmloyeeByUsername(String userName);
 
-    boolean saveEmployee(Employee employee);
+    Mono<Employee> saveEmployee(Employee employee);
+
+    Mono<Boolean> employeeExistsById(String id);
 
 }
