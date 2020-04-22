@@ -89,6 +89,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
        Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
         validator.validate(transaction,errors);
         if(errors.getAllErrors().isEmpty()) {
+
             Mono<Boolean> cl = clientRepository.existsById(transaction.getClientId());
             Mono<Boolean> o = organisationUnitRepository.existsById(transaction.getOrganisationUnitID());
             Mono<Boolean> emp = employeeRepository.existsById(transaction.getCreatedBy());
