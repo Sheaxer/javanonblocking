@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import stuba.fei.gono.java.errors.ReportedOverlimitTransactionException;
 import stuba.fei.gono.java.nonblocking.services.ReportedOverlimitTransactionService;
 import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 
@@ -26,7 +27,7 @@ public class ReportedOverlimitTransactionController {
     @ResponseStatus(HttpStatus.OK)
     public Mono<ReportedOverlimitTransaction> getTransaction (@PathVariable String id)
     {
-        return transactionService.getTransactionById(id);
+        return transactionService.getTransactionById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_NOT_FOUND")));
     }
 
     @PostMapping(value = "/reportedOverlimitTransaction", consumes = "application/json")
