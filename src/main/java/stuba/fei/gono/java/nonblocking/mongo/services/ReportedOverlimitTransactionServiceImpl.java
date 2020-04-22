@@ -69,9 +69,8 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                             customErrors.add("ACCOUNT_OFFLINE");*/
         if (x.getT4().getIsActive() == null || !x.getT4().getIsActive())
             customErrors.add("ACCOUNT_OFFLINE");
-        for (ObjectError oe : x.getT5().getAllErrors()) {
-            customErrors.add(Objects.requireNonNull(oe.getCodes())[oe.getCodes().length - 1]);
-        }
+        x.getT5().getAllErrors().stream().
+                map(oe -> Objects.requireNonNull(oe.getCodes())[oe.getCodes().length - 1]).forEach(customErrors::add);
         if (customErrors.isEmpty()) {
             return true;
         } else
