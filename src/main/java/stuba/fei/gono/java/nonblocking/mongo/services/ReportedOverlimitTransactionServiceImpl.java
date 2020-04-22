@@ -57,7 +57,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         this.nextSequenceService = nextSequenceService;
     }
 
-    private static Boolean apply(Tuple5<Boolean, Boolean, Boolean, Account, Errors> x) {
+    private static Boolean apply(Tuple5<Boolean, Boolean, Boolean, Boolean, Errors> x) {
         List<String> customErrors = new ArrayList<>();
         if (!x.getT1())
             customErrors.add("CLIENTID_NOT_VALID");
@@ -67,7 +67,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
             customErrors.add("CREATEDBY_NOT_VALID");
                         /*if(x.getT5() == null)
                             customErrors.add("ACCOUNT_OFFLINE");*/
-        if (x.getT4().getIsActive() == null || !x.getT4().getIsActive())
+        if (!x.getT4())
             customErrors.add("ACCOUNT_OFFLINE");
         x.getT5().getAllErrors().stream().
                 map(oe -> Objects.requireNonNull(oe.getCodes())[oe.getCodes().length - 1]).forEach(customErrors::add);
@@ -112,10 +112,8 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         Mono<Boolean> cl;
         Mono<Boolean> o;
         Mono<Boolean> emp;
-        Mono<Account> activeAccount;
+        Mono<Boolean> activeAccount;
         Mono<Errors> errorsMono;
-        Account a = new Account();
-        a.setIsActive(true);
        // Errors errors = new BeanPropertyBindingResult(transaction, ReportedOverlimitTransaction.class.getName());
        errorsMono = Mono.just(transaction).flatMap(
                t->
@@ -143,17 +141,35 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                 emp = Mono.just(true);
             if(transaction.getSourceAccount() != null)
             {
-                if(transaction.getSourceAccount().getIban()!= null)
-                    activeAccount = accountRepository.findAccountByIban(transaction.getSourceAccount().getIban());
-                else if(transaction.getSourceAccount().getLocalAccountNumber() != null)
-                    activeAccount = accountRepository.findAccountByLocalAccountNumber(transaction.getSourceAccount().getLocalAccountNumber());
-                else
-                    activeAccount = Mono.just(new Account());
+                if(transaction.getSourceAccount().getIban()!= null) {
+                    activeAccount = accountRepository.findAccountByIban(transaction.getSourceAccount().getIban()).map(
+                            t-> {
+                                if(t==null)
+                                    return true;
+                                if(t.getIsActive() == null)
+                                    return false;
+                                return t.getIsActive();
+                            }
+                    ).switchIfEmpty(Mono.just(false));
+                } else if(transaction.getSourceAccount().getLocalAccountNumber() != null) {
+                    activeAccount = accountRepository.findAccountByLocalAccountNumber(transaction.getSourceAccount().getLocalAccountNumber()).map(
+                            t->
+                            {
+                                if(t==null)
+                                    return false;
+                                if(t.getIsActive() == null)
+                                    return false;
+                                return t.getIsActive();
+                            }
+
+                    ).switchIfEmpty(Mono.just(false));
+                } else
+                    activeAccount = Mono.just(false);
             }
             else
-                activeAccount =  Mono.just(a);
+                activeAccount =  Mono.just(true);
           //  Mono<Tuple4<Boolean, Boolean, Boolean, Account>> tup = Mono.zip(cl, o, emp,activeAccount);
-        Mono<Tuple5<Boolean, Boolean, Boolean, Account, Errors>> tup = Mono.zip(cl, o, emp,activeAccount,errorsMono);
+        Mono<Tuple5<Boolean, Boolean, Boolean, Boolean, Errors>> tup = Mono.zip(cl, o, emp,activeAccount,errorsMono);
             return tup.map(
                     /*if(x.getT5() == null)
                             customErrors.add("ACCOUNT_OFFLINE");*/
