@@ -21,7 +21,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Document(collection = "reportedOverlimiTransactions")
+@Document(collection = "reportedOverlimitTransactions")
 public class ReportedOverlimitTransaction {
 
     @Id
