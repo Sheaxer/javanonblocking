@@ -104,9 +104,10 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     }
 
     /***
-     *
-     * @param id
-     * @return
+     * Return entity with the given id.
+     * @param id must not be null.
+     * @return Mono emitting the entity or Mono.empty() if there is none.
+     * @see ReportedOverlimitTransactionValidationException
      */
     @Override
     public Mono<ReportedOverlimitTransaction> getTransactionById(String id) {
@@ -218,14 +219,16 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     /***
      * Deletes the ReportedOverlimitTransaction with the given id.
      * @param id must not be null.
-     * @return Mono emitting Void.
-     * @throws ReportedOverlimitTransactionNotFoundException in case there is no entity with the given id.
-     * @throws ReportedOverlimitTransactionBadRequestException if the entity with given id cannot be deleted because its
-     * state is CLOSED.
+     * @return Mono emitting when the operation was completed, Mono.error(ReportedOverlimitTransactionNotFoundException)
+     * if the entity with given id was not found or Mono.error(ReportedOverlimitTransactionBadRequestException) if the
+     * entity couldn't be deleted because its state is CLOSED.
+     * @see ReportedOverlimitTransactionNotFoundException
+     * @see ReportedOverlimitTransactionBadRequestException
+     * @see State
+     * @see ReportedOverlimitTransaction
      */
     @Override
-    public Mono<Void> deleteTransaction(String id) throws ReportedOverlimitTransactionNotFoundException,
-            ReportedOverlimitTransactionBadRequestException
+    public Mono<Void> deleteTransaction(String id)
     {
       return getTransactionById(id).switchIfEmpty(
               Mono.error(new ReportedOverlimitTransactionNotFoundException("ID_NOT_FOUND"))).flatMap(

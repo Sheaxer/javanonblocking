@@ -9,9 +9,20 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+/***
+ * Class implementing validator for transferDate field in ReportedOverlimitTransaction. The date must not be the past
+ * or on the same day as the day of creating the ReportedOverlimitTransaction or the validator rejects transferDate
+ * with error code "INVALID_DATE_IN_PAST". The date also must be at least cDays number of days
+ * in the future from the day of creating ReportedOverlimitTransaction or the validator rejects transferDate
+ * with error code "FIELD_INVALID_TOO_NEAR_IN_FUTURE".
+ */
 @Component
 public class TransferDateValidator implements Validator {
-
+    /***
+     * Minimal number of days from day of creating ReportedOverlimitTransaction to transfer day. Property
+     * reportedOverlimitTransaction.daysBefore, default 3.
+     */
     @Value("${reportedOverlimitTransaction.daysBefore:3}")
     private long cDays;
 

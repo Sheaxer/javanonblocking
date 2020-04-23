@@ -26,7 +26,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "reportedOverlimitTransactions")
 public class ReportedOverlimitTransaction {
-
+    
     @Id
     private String id;
 

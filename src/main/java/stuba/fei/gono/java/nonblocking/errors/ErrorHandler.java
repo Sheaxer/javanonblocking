@@ -17,7 +17,8 @@ import java.util.*;
 @RestControllerAdvice
 public class ErrorHandler {
     /***
-     * Handles ReportedOverlimitTransactionException.
+     * Handles ReportedOverlimitTransactionNotFoundException  by returning the error code and sending HTTP code
+     * NOT_FOUND - 404.
      * @param ex caught exception.
      * @return Mono emitting the list containing the error message of ex.
      */
@@ -27,7 +28,12 @@ public class ErrorHandler {
     public Mono<List<String>> springHandleNotFound(Exception ex) {
         return Mono.just(new ArrayList<>(Collections.singleton(ex.getMessage())));
     }
-
+    /***
+     * Handles ReportedOverlimitTransactionBadRequestException by returning the error code and sending HTTP code
+     * BAD_REQUEST - 400.
+     * @param ex caught exception.
+     * @return Mono emitting the list containing the error message of ex.
+     */
     @ExceptionHandler(ReportedOverlimitTransactionBadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Mono<List<String>> handleBadRequest(ReportedOverlimitTransactionBadRequestException ex)

@@ -29,12 +29,12 @@ public class ReportedOverlimitTransactionController {
     }
 
     /***
-     * Returns ReportedOverlimitTransaction entity with the given id
-     * @param id
+     * Returns ReportedOverlimitTransaction entity with the given id.
+     * @param id id of requested entity.
      * @return Mono emitting the value of entity.
      * @throws ReportedOverlimitTransactionNotFoundException if there is no entity with the given id.
      */
-    @GetMapping(value = "{id}")
+    @GetMapping(value = "/{id}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Mono<ReportedOverlimitTransaction> getTransaction (@PathVariable String id)
@@ -65,8 +65,8 @@ public class ReportedOverlimitTransactionController {
 
     /***
      * REST PUT method that saves the given entity with the given id.
-     * @param id
-     * @param transaction - entity to be saved.
+     * @param id id which will be identifying the saved entity.
+     * @param transaction entity to be saved.
      * @return Mono emitting the saved entity.
      * @throws ReportedOverlimitTransactionValidationException containing error codes if the validation of entity fails.
      */
@@ -81,7 +81,7 @@ public class ReportedOverlimitTransactionController {
 
     /***
      * DELETE REST method that deletes the entity with given id.
-     * @param id
+     * @param id id of entity that should be deleted.
      * @return Mono emitting when the operation was completed.
      * @throws ReportedOverlimitTransactionNotFoundException no entity with the given id was found.
      * @throws ReportedOverlimitTransactionBadRequestException entity with the given id couldn't be deleted.

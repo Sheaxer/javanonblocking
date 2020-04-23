@@ -9,14 +9,19 @@ import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.java.pojo.Currency;
 import stuba.fei.gono.java.pojo.OrderCategory;
 
+/***
+ * Class implementing validaiton of ReportedOverlimitTransaction according to
+ * FENiX - New FrontEnd solution API definition (version 0.1)
+ * @see ReportedOverlimitTransaction
+ */
 @Component
 public class ReportedOverlimitTransactionValidator implements Validator {
 
-    private final FluxAccountValidator accountValidator;
+    private final AccountValidator accountValidator;
     private final TransferDateValidator transferDateValidator;
     private final MoneyValidator moneyValidator;
 
-    public ReportedOverlimitTransactionValidator(FluxAccountValidator accountValidator, TransferDateValidator transferDateValidator,
+    public ReportedOverlimitTransactionValidator(AccountValidator accountValidator, TransferDateValidator transferDateValidator,
                                                  MoneyValidator moneyValidator) {
         this.accountValidator = accountValidator;
         this.transferDateValidator = transferDateValidator;

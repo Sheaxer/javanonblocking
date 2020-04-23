@@ -5,8 +5,12 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import stuba.fei.gono.java.pojo.AccountNO;
 
+/***
+ * Class implementing validation of AccounNO - must have either a IBAN or Local Account Number, otherwise the validator
+ * rejects the AccountNO with error message "INVALID_ACCOUNT".
+ */
 @Component
-public class FluxAccountValidator implements Validator {
+public class AccountValidator implements Validator {
     @Override
     public boolean supports(Class<?> aClass) {
         return AccountNO.class.isAssignableFrom(aClass);
