@@ -18,6 +18,9 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
+/***
+ * Class representing ReportedOverlimitTransaction from FENiX - New FrontEnd solution API definition.
+ */
 @Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -33,7 +36,7 @@ public class ReportedOverlimitTransaction {
     private State state;
 
 
-    private Account sourceAccount;
+    private AccountNO sourceAccount;
 
    // @DBRef
     //@Valid

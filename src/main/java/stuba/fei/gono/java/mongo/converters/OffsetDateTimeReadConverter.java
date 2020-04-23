@@ -12,6 +12,7 @@ import java.util.Date;
  * Needed because MongoDB cannot serialize objects of OffsetDateTime class.
  * @see OffsetDateTime
  * @see Date
+ * @see ReadingConverter
  */
 @ReadingConverter
 public class OffsetDateTimeReadConverter implements Converter<Date, OffsetDateTime> {

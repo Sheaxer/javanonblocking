@@ -1,38 +1,46 @@
 package stuba.fei.gono.java.nonblocking.errors;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import reactor.core.publisher.Mono;
-import stuba.fei.gono.java.errors.ReportedOverlimitTransactionException;
+import stuba.fei.gono.java.errors.ReportedOverlimitTransactionBadRequestException;
+import stuba.fei.gono.java.errors.ReportedOverlimitTransactionNotFoundException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /***
- * Class that implements custom error handling
+ * Class that implements custom error handling.
  */
 @RestControllerAdvice
 public class ErrorHandler {
-
-    @ExceptionHandler(ReportedOverlimitTransactionException.class)
+    /***
+     * Handles ReportedOverlimitTransactionException.
+     * @param ex caught exception.
+     * @return Mono emitting the list containing the error message of ex.
+     */
+    @ExceptionHandler(ReportedOverlimitTransactionNotFoundException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public List<String> springHandleNotFound(Exception ex) {
-        return new ArrayList<>(Collections.singleton(ex.getMessage()));
+    public Mono<List<String>> springHandleNotFound(Exception ex) {
+        return Mono.just(new ArrayList<>(Collections.singleton(ex.getMessage())));
     }
 
+    @ExceptionHandler(ReportedOverlimitTransactionBadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Mono<List<String>> handleBadRequest(ReportedOverlimitTransactionBadRequestException ex)
+    {
+        return Mono.just(new ArrayList<>(Collections.singleton(ex.getMessage())));
+    }
 
-    /***
+   /* /***
      * Transforms validation errors into JSON array
      * @param ex caught validation exception
      * @return List of validation error messages
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+   /* @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Mono<List<String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -41,15 +49,23 @@ public class ErrorHandler {
                 .getAllErrors().stream()
                 .map(ObjectError::getDefaultMessage).collect(Collectors.toList())
                );
-    }
-
+    }*/
+/*
     @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Mono<String> handleMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException ex) {
         return Mono.just(ex.getMessage());
-    }
+    }*/
 
+    /***
+     * Method that handles validation errors during put and post REST methods
+     * @see ReportedOverlimitTransactionValidationException
+     * @see stuba.fei.gono.java.nonblocking.validation.ReportedOverlimitTransactionValidator
+     * @param e exception containing errors that were discovered during validation
+     * @return Mono from List of errors discovered during validation
+     *
+     */
     @ExceptionHandler(ReportedOverlimitTransactionValidationException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)

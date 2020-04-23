@@ -5,13 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import stuba.fei.gono.java.errors.ReportedOverlimitTransactionException;
+import stuba.fei.gono.java.errors.ReportedOverlimitTransactionBadRequestException;
+import stuba.fei.gono.java.errors.ReportedOverlimitTransactionNotFoundException;
+import stuba.fei.gono.java.nonblocking.errors.ReportedOverlimitTransactionValidationException;
 import stuba.fei.gono.java.nonblocking.services.ReportedOverlimitTransactionService;
 import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 
+/***
+ * REST controller for GET,POST,PUT and DELETE methods for ReportedOverlimitTransaction entities.
+ * @see ReportedOverlimitTransaction
+ */
 @Slf4j
 @RestController
-//@RequestMapping(value = "/reportedOverlimitTransaction")
+@RequestMapping(value = "/reportedOverlimitTransaction")
 public class ReportedOverlimitTransactionController {
 
     private ReportedOverlimitTransactionService transactionService;
@@ -22,17 +28,32 @@ public class ReportedOverlimitTransactionController {
         this.transactionService = transactionService;
     }
 
-    @GetMapping(value = "/reportedOverlimitTransaction/{id}")
+    /***
+     * Returns ReportedOverlimitTransaction entity with the given id
+     * @param id
+     * @return Mono emitting the value of entity.
+     * @throws ReportedOverlimitTransactionNotFoundException if there is no entity with the given id.
+     */
+    @GetMapping(value = "{id}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Mono<ReportedOverlimitTransaction> getTransaction (@PathVariable String id)
+            throws ReportedOverlimitTransactionNotFoundException
     {
-        return transactionService.getTransactionById(id).switchIfEmpty(Mono.error(new ReportedOverlimitTransactionException("ID_NOT_FOUND")));
+        return transactionService.getTransactionById(id).switchIfEmpty(Mono.error(
+                new ReportedOverlimitTransactionNotFoundException("ID_NOT_FOUND")));
     }
 
-    @PostMapping(value = "/reportedOverlimitTransaction", consumes = "application/json")
+    /***
+     * Generates new id and saves news and saves the given entity.
+     * @param newTransaction - entity to be saved.
+     * @return Mono emitting the saved entity.
+     * @throws ReportedOverlimitTransactionValidationException containing error codes if the validation of entity fails.
+     */
+    @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Mono<ReportedOverlimitTransaction> postTransaction( @RequestBody ReportedOverlimitTransaction newTransaction)
+    throws ReportedOverlimitTransactionValidationException
     {
 
       return  transactionService.postTransaction(newTransaction);
@@ -42,21 +63,33 @@ public class ReportedOverlimitTransactionController {
       );*/
     }
 
-    @PutMapping(value = "/reportedOverlimitTransaction/{id}", consumes = "application/json")
+    /***
+     * REST PUT method that saves the given entity with the given id.
+     * @param id
+     * @param transaction - entity to be saved.
+     * @return Mono emitting the saved entity.
+     * @throws ReportedOverlimitTransactionValidationException containing error codes if the validation of entity fails.
+     */
+    @PutMapping(value = "/{id}", consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<ReportedOverlimitTransaction> putTransaction(@PathVariable String id, @RequestBody ReportedOverlimitTransaction transaction)
+    public Mono<ReportedOverlimitTransaction> putTransaction(@PathVariable String id,
+                                                             @RequestBody ReportedOverlimitTransaction transaction)
+    throws ReportedOverlimitTransactionValidationException
     {
         return transactionService.putTransaction(id, transaction);
-        /*.onErrorResume(
-                throwable -> throwable instanceof ReportedOverlimitTransactionValidationException,
-                throwable -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        ((ReportedOverlimitTransactionValidationException)throwable).getErrors()))
-        );*/
     }
 
-    @DeleteMapping(value = "/reportedOverlimitTransaction/{id}")
+    /***
+     * DELETE REST method that deletes the entity with given id.
+     * @param id
+     * @return Mono emitting when the operation was completed.
+     * @throws ReportedOverlimitTransactionNotFoundException no entity with the given id was found.
+     * @throws ReportedOverlimitTransactionBadRequestException entity with the given id couldn't be deleted.
+     */
+    @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> deleteTransaction(@PathVariable String id)
+    throws ReportedOverlimitTransactionNotFoundException, ReportedOverlimitTransactionBadRequestException
     {
        return  transactionService.deleteTransaction(id);
     }

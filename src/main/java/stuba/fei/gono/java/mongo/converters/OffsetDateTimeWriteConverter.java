@@ -11,6 +11,7 @@ import java.util.Date;
  * Needed because MongoDB cannot deserialize object of OffsetDateTime class.
  * @see OffsetDateTime
  * @see Date
+ * @see WritingConverter
  */
 @WritingConverter
 public class OffsetDateTimeWriteConverter implements Converter<OffsetDateTime, Date> {

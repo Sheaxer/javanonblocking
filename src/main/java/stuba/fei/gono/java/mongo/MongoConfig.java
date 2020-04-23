@@ -1,9 +1,13 @@
 package stuba.fei.gono.java.mongo;
 
+import com.mongodb.client.MongoClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import stuba.fei.gono.java.mongo.converters.OffsetDateTimeReadConverter;
 import stuba.fei.gono.java.mongo.converters.OffsetDateTimeWriteConverter;
 
@@ -14,7 +18,8 @@ import java.util.List;
  * Configuration class that modifies default configuration of MongoDB
  */
 @Configuration
-public class MongoConfig  {
+public class MongoConfig {
+
 
     /***
      * Adds custom converters for converting Java Classes that are unable to be serialized / deserialized by MongoDB
@@ -32,5 +37,4 @@ public class MongoConfig  {
         converters.add(new OffsetDateTimeWriteConverter());
         return new MongoCustomConversions(converters);
     }
-
 }

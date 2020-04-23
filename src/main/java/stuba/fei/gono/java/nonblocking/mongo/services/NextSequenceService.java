@@ -23,7 +23,9 @@ import javax.validation.constraints.NotNull;
 import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
-
+/***
+ * Service that generates next id value for storing data in MongoDB.
+ */
 @Slf4j
 @Service
 public class NextSequenceService {
@@ -35,7 +37,13 @@ public class NextSequenceService {
         this.mongoOperations = mongoOperations;
     }
 
-    public Mono<String> getNextSequence(@NotNull String seqName)
+    /***
+     * Increments the value of sequence with the given sequence name and return it.
+     * @see SequenceId
+     * @param seqName - name of the sequence.
+     * @return - updated value of the sequence.
+     */
+    private Mono<String> getNextSequence(@NotNull String seqName)
     {
         Mono<SequenceId> counter = reactiveMongoOperations.findAndModify(
                 query(where("_id").is(seqName)),
@@ -61,8 +69,9 @@ public class NextSequenceService {
 
     /***
      * Sets value of sequence in MongoDB.
-     * @param seqName name of the sequence
-     * @param value value that the sequence will be set to
+     * @see SequenceId
+     * @param seqName name of the sequence,
+     * @param value value that the sequence will be set to.
      */
     public Mono<SequenceId> setNextSequence(@NotNull String seqName,@NotNull String value)
     {
@@ -78,6 +87,12 @@ public class NextSequenceService {
         }*/
     }
 
+    /***
+     * Retrieves new value of an id for saving new object in a repository.
+     * @param rep repository where the object will be saved.
+     * @param sequenceName name of the sequence holding the id of last saved object.
+     * @return value of id that should be used to save object in the given repository.
+     */
     public Mono<String> getNewId(@NotNull ReactiveCrudRepository<?,String> rep, @NotNull String sequenceName)
     {
 
@@ -110,13 +125,28 @@ public class NextSequenceService {
         );
     }
 
-    public String lastId(@NotNull Class<?> rep)
+    /***
+     * Calculates the maximal id that was used to save an object in the given repository.
+     * @param rep repository, must not be null.
+     * @return String value of the maximal id in the given repository.
+     */
+    private String lastId(@NotNull Class<?> rep)
     {
         return mongoOperations.execute(rep, mongoCollection -> {
             FindIterable<Document> doc= mongoCollection.find().projection(Projections.include("_id"));
             Long max=0L;
 
-            MongoIterable<Long> s = doc.map(document -> Long.valueOf(document.getString("_id")));
+            MongoIterable<Long> s = doc.map(document ->
+            {
+                try{
+                    return Long.parseLong(document.getString("_id"));
+                }
+                catch (NumberFormatException e)
+                {
+                    return 0L;
+                }
+
+            });
             Long lastVal=0L;
             for (Long tmp : s) {
                 lastVal = tmp > lastVal ? tmp : lastVal;
@@ -124,6 +154,34 @@ public class NextSequenceService {
             lastVal++;
             return String.valueOf(lastVal);
         });
+    }
+
+    /***
+     * Checks if the sequence with given name needs to update its maximal id value by the given value.
+     * @param seqName - name of the sequence, must not be null.
+     * @param val - value to be checked against maximal id value, must not be null.
+     * @return Mono emitting when the operation was completed.
+     */
+    public Mono<Void> needsUpdate(String seqName, String val)
+    {
+       return reactiveMongoOperations.find(query(where("_id").is((seqName))),SequenceId.class ).
+               switchIfEmpty(Mono.just(new SequenceId())).single().flatMap(
+               sequenceId ->
+               {
+                   try
+                   {
+                       Long longVal = Long.parseLong(val);
+                       if(longVal > sequenceId.getSeq())
+                           return setNextSequence(seqName,val).then();
+                       else
+                           return Mono.just(true).then();
+                   }
+                   catch(NumberFormatException e)
+                   {
+                       return Mono.just(true).then();
+                   }
+               }
+       );
     }
 
 }
