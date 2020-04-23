@@ -114,6 +114,14 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         return transactionRepository.findById(id);
     }
 
+    /***
+     * Saves the entity with the given id.
+     * @param id id identifying the saved entity.
+     * @param transaction entity to be saved
+     * @return Mono emitting the saved entity or Mono.error(ReportedOverlimitTransactionValidationException) if
+     * the entity is not valid.
+     * @see ReportedOverlimitTransactionValidationException
+     */
     @Override
     public Mono<ReportedOverlimitTransaction> putTransaction(String id, ReportedOverlimitTransaction transaction) {
         transaction.setId(id);

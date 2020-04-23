@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 
+/***
+ * Class representing data about bank employee and the system user.
+ */
 @Data
 @NoArgsConstructor
 @Document(collection = "employees")
