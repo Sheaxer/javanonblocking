@@ -60,10 +60,12 @@ public class ReportedOverlimitTransaction {
      * Structure for vault. Detail information about withdrow amount.
      */
     private List<Vault> vault;
+
     /***
      * Withdraw amount in defined currency (only EUR for DOMESTIC) and with precision (embedded AMOUNT type).
      */
     private Money amount;
+
     /***
      * Requested due date entered by client (have to be in near future, minimal D+3),
      * date when withdraw order should be realized from user account.
@@ -74,6 +76,7 @@ public class ReportedOverlimitTransaction {
     /***
      * Client/teller note to related withdraw
      */
+
     private String note;
 
     /***

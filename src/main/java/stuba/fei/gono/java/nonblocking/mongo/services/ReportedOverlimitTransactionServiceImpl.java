@@ -93,7 +93,6 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     @Override
     public Mono<ReportedOverlimitTransaction> postTransaction(ReportedOverlimitTransaction transaction) {
         transaction.setModificationDate(OffsetDateTime.now());
-
         return  test(transaction).then(nextSequenceService.getNewId(transactionRepository,sequenceName).flatMap(
                 newId ->
                 {
@@ -126,7 +125,6 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     public Mono<ReportedOverlimitTransaction> putTransaction(String id, ReportedOverlimitTransaction transaction) {
         transaction.setId(id);
         transaction.setModificationDate(OffsetDateTime.now());
-        //transaction.setZoneOffset(OffsetDateTime.now().getOffset().getId());
         return test(transaction).then(nextSequenceService.needsUpdate(sequenceName,id)).
                 then(transactionRepository.save(transaction));
     }
