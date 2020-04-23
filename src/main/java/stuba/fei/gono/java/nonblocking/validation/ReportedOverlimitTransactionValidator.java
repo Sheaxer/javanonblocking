@@ -20,12 +20,14 @@ public class ReportedOverlimitTransactionValidator implements Validator {
     private final AccountValidator accountValidator;
     private final TransferDateValidator transferDateValidator;
     private final MoneyValidator moneyValidator;
+    private final BankingDayValidator bankingDayValidator;
 
     public ReportedOverlimitTransactionValidator(AccountValidator accountValidator, TransferDateValidator transferDateValidator,
-                                                 MoneyValidator moneyValidator) {
+                                                 MoneyValidator moneyValidator, BankingDayValidator bankingDayValidator) {
         this.accountValidator = accountValidator;
         this.transferDateValidator = transferDateValidator;
         this.moneyValidator = moneyValidator;
+        this.bankingDayValidator = bankingDayValidator;
     }
 
     @Override
@@ -44,6 +46,8 @@ public class ReportedOverlimitTransactionValidator implements Validator {
         ValidationUtils.rejectIfEmpty(errors,"amount","FIELD_INVALID");
         ValidationUtils.rejectIfEmpty(errors,"vault","VAULT_INVALID");
         ValidationUtils.rejectIfEmpty(errors,"transferDate","INVALID_DATE");
+        if(transaction.getTransferDate() != null)
+            ValidationUtils.invokeValidator(bankingDayValidator,transaction.getTransferDate(),errors);
         if(transaction.getTransferDate()!=null)
             ValidationUtils.invokeValidator(transferDateValidator,transaction.getTransferDate(),errors);
         ValidationUtils.rejectIfEmpty(errors,"createdBy","CREATEDBY_NOT_VALID");
