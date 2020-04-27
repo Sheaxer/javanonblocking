@@ -45,13 +45,14 @@ public class ReportedOverlimitTransactionValidator implements Validator {
             ValidationUtils.invokeValidator(accountValidator,transaction.getSourceAccount(),errors);
         ValidationUtils.rejectIfEmpty(errors,"amount","FIELD_INVALID");
         ValidationUtils.rejectIfEmpty(errors,"vault","VAULT_INVALID");
-        ValidationUtils.rejectIfEmpty(errors,"transferDate","INVALID_DATE");
+        ValidationUtils.rejectIfEmpty(errors,"transferDate","DATE_INVALID");
         if(transaction.getTransferDate() != null)
+        {
             ValidationUtils.invokeValidator(bankingDayValidator,transaction.getTransferDate(),errors);
-        if(transaction.getTransferDate()!=null)
             ValidationUtils.invokeValidator(transferDateValidator,transaction.getTransferDate(),errors);
-        ValidationUtils.rejectIfEmpty(errors,"createdBy","CREATEDBY_NOT_VALID");
-        ValidationUtils.rejectIfEmpty(errors,"organisationUnitID","ORGANISATIONUNITID_NOT_VALID");
+        }
+        ValidationUtils.rejectIfEmpty(errors,"createdBy","CREATEDBY_INVALID");
+        ValidationUtils.rejectIfEmpty(errors,"organisationUnitID","ORGANISATIONUNIT_INVALID");
         if(transaction.getAmount() != null)
             ValidationUtils.invokeValidator(moneyValidator,transaction.getAmount(),errors);
         if(transaction.getOrderCategory() != null && transaction.getAmount() != null && transaction.getAmount().getCurrency() != null)

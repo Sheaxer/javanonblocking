@@ -35,9 +35,11 @@ public class MoneyValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Money m = (Money)o;
+        if(m.getCurrency() == null)
+            errors.reject("CURRENCY_INVALID");
         if(m.getAmount()<=0 || m.getAmount()> this.maxAmount)
             errors.reject("FIELD_INVALID");
-        if(m.getAmount()> this.limit)
+        else if(m.getAmount()> this.limit)
             errors.reject("LIMIT_EXCEEDED");
     }
 }

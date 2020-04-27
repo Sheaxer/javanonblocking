@@ -21,8 +21,7 @@ public class AccountValidator implements Validator {
         AccountNO account = (AccountNO)o;
         if((account.getIban() == null) || (account.getIban().isEmpty()))
         {
-            if((account.getBic() == null) || (account.getBic().isEmpty())
-                    || (account.getLocalAccountNumber() == null) || (account.getLocalAccountNumber().isEmpty()))
+            if((account.getLocalAccountNumber() == null) || (account.getLocalAccountNumber().isEmpty()))
             {
                 errors.reject("INVALID_ACCOUNT");
             }

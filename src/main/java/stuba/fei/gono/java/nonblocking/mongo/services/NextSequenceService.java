@@ -11,10 +11,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import stuba.fei.gono.java.nonblocking.mongo.repositories.ClientRepository;
-import stuba.fei.gono.java.nonblocking.mongo.repositories.EmployeeRepository;
-import stuba.fei.gono.java.nonblocking.mongo.repositories.OrganisationUnitRepository;
-import stuba.fei.gono.java.nonblocking.mongo.repositories.ReportedOverlimitTransactionRepository;
+import stuba.fei.gono.java.nonblocking.mongo.repositories.*;
 import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.java.pojo.*;
 
@@ -72,6 +69,7 @@ public class NextSequenceService {
      * @see SequenceId
      * @param seqName name of the sequence,
      * @param value value that the sequence will be set to.
+     * @return Mono containing SequenceId with modified value.
      */
     public Mono<SequenceId> setNextSequence(@NotNull String seqName,@NotNull String value)
     {
@@ -114,6 +112,8 @@ public class NextSequenceService {
                                               tmpId = lastId(Employee.class);
                                           else if (rep instanceof OrganisationUnitRepository)
                                               tmpId = lastId(OrganisationUnit.class);
+                                          else if(rep instanceof AccountRepository)
+                                              tmpId = lastId(Account.class);
                                           //newId = this.getNextSequence(sequenceName);
                                           this.setNextSequence(sequenceName, tmpId).subscribe();
                                           log.info("wasModified");
@@ -164,13 +164,13 @@ public class NextSequenceService {
      */
     public Mono<Void> needsUpdate(String seqName, String val)
     {
-       return reactiveMongoOperations.find(query(where("_id").is((seqName))),SequenceId.class ).
+       return reactiveMongoOperations.find(query(where("_id").is(seqName)),SequenceId.class ).
                switchIfEmpty(Mono.just(new SequenceId())).single().flatMap(
                sequenceId ->
                {
                    try
                    {
-                       Long longVal = Long.parseLong(val);
+                       long longVal = Long.parseLong(val);
                        if(longVal > sequenceId.getSeq())
                            return setNextSequence(seqName,val).then();
                        else

@@ -66,11 +66,11 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
             throws ReportedOverlimitTransactionValidationException {
         List<String> customErrors = new ArrayList<>();
         if (!x.getT1())
-            customErrors.add("CLIENTID_NOT_VALID");
+            customErrors.add("CLIENTID_INVALID");
         if (!x.getT2())
-            customErrors.add("ORGANISATIONUNIT_NOT_VALID");
+            customErrors.add("ORGANISATIONUNIT_INVALID");
         if (!x.getT3())
-            customErrors.add("CREATEDBY_NOT_VALID");
+            customErrors.add("CREATEDBY_INVALID");
                         /*if(x.getT5() == null)
                             customErrors.add("ACCOUNT_OFFLINE");*/
         if (!x.getT4())
