@@ -68,17 +68,18 @@ public class ErrorHandler {
      * Method that handles validation errors during put and post REST methods
      * @see ReportedOverlimitTransactionValidationException
      * @see stuba.fei.gono.java.nonblocking.validation.ReportedOverlimitTransactionValidator
-     * @param e exception containing errors that were discovered during validation
+     * @param ex exception containing errors that were discovered during validation
      * @return Mono from List of errors discovered during validation
      *
      */
     @ExceptionHandler(ReportedOverlimitTransactionValidationException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Mono<List<String>> handleReportedOverlimitTransactionValidationException(ReportedOverlimitTransactionValidationException e)
+    public Mono<List<String>> handleReportedOverlimitTransactionValidationException
+    (ReportedOverlimitTransactionValidationException ex)
     {
         return Mono.just(
-                        e.getErrors()
+                        ex.getErrors()
         );
         //return e.getErrors();
     }

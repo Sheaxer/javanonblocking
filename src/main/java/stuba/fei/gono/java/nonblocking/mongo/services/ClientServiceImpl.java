@@ -20,8 +20,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     /***
-     * Retrieves Client by its id
-     * @param id must not be null
+     * Finds Client entity with the given id.
+     * @param id must not be null.
      * @return Mono emitting the Client with the given id or Mono.empty() if none found.
      */
     @Override
@@ -30,7 +30,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     /***
-     * Checks if Client is stored in the database
+     * Checks if entity with the given id is exists.
      * @param id id of client
      * @return Mono emitting true if Client with the given id exists, false otherwise.
      */

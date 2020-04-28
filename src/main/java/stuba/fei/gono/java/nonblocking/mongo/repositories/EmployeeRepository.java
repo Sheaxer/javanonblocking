@@ -17,4 +17,6 @@ public interface EmployeeRepository extends ReactiveCrudRepository<Employee, Str
      * @return Mono emitting the entity or Mono.empty() if no entity was found.
      */
     Mono<Employee> findByUsername(String userName);
+
+    Mono<Boolean> existsByUsername(String username);
 }

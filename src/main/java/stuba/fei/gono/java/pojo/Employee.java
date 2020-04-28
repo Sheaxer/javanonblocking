@@ -1,5 +1,7 @@
 package stuba.fei.gono.java.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -17,10 +19,11 @@ import javax.validation.constraints.NotBlank;
 public class Employee  {
     @Id
     private String id;
-    @NotBlank
+    @NotBlank(message = "USERNAME_PASSWORD")
     @Indexed(unique = true)
     private String username;
-    @NotBlank
+    @NotBlank(message = "PASSWORD_INVALID")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
 

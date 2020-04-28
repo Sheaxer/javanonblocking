@@ -22,7 +22,7 @@ public class AccountServiceImpl implements AccountService {
 
     /***
      * Retrieves the Account  identified by IBAN
-     * @param iban IBAN of desired Account, must not be null
+     * @param iban IBAN of desired Account, must not be null.
      * @return Mono emitting the Account identified by given IBAN or Mono.empty() if none found.
      */
     @Override
@@ -31,7 +31,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     /***
-     *
+     * Retrieves the entity  identified by a local account number.
      * @param number Local Account Number of desired Account
      * @return Mono of Account identified by the given Local account number or Mono.empty() if none found.
      */

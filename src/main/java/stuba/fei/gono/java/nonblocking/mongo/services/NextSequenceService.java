@@ -86,7 +86,10 @@ public class NextSequenceService {
     }
 
     /***
-     * Retrieves new value of an id for saving new object in a repository.
+     * Retrieves new value of an id for saving new object in a repository. Updates maximal value
+     * of sequence with the given name, checks if an entity with this id already exists in the repository.
+     * If it does exist, function finds the actual maximal value of id used to store entities in the repository and
+     * updates the sequence.
      * @param rep repository where the object will be saved.
      * @param sequenceName name of the sequence holding the id of last saved object.
      * @return value of id that should be used to save object in the given repository.
@@ -127,6 +130,7 @@ public class NextSequenceService {
 
     /***
      * Calculates the maximal id that was used to save an object in the given repository.
+     * Transforms ids of all entities of the given class into long and finds the max.
      * @param rep repository, must not be null.
      * @return String value of the maximal id in the given repository.
      */
