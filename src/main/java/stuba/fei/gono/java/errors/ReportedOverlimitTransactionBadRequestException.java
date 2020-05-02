@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /***
  * Custom exception when cannot perform operation on ReportedOverlimitTransaction entity.
+ *
+ * Vlastná výnimka vyvolaná v prípade, že nebolo možné vykonať operáciu nad entitou.
  */
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 @ResponseBody

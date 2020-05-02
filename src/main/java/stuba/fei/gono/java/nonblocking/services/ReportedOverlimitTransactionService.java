@@ -48,4 +48,6 @@ public interface ReportedOverlimitTransactionService {
       */
      Mono<Void> deleteTransaction (String id);
 
+      Mono<Void> validate(ReportedOverlimitTransaction transaction)
+             throws ReportedOverlimitTransactionValidationException;
 }

@@ -15,16 +15,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /***
- * Configuration class that modifies default configuration of MongoDB
+ * <div class="en">Configuration class that modifies default configuration of MongoDB.</div>
+ * <div class="sk>Konfiguračná trieda, ktorá modifikuje predvolenú konfiguráciu MongoDB.</div>
  */
 @Configuration
 public class MongoConfig {
 
 
     /***
-     * Adds custom converters for converting Java Classes that are unable to be serialized / deserialized by MongoDB
-     * to classes that are able to be serialized / deserialized
-     * @return Instance of class MongoCustomConversions instantiated by list of custom MongoDB converters
+     * <div class="en">Adds custom converters for converting Java Classes that are unable to be serialized
+     * / deserialized by MongoDB to classes that are able to be serialized / deserialized.</div>
+     * <div class="sk">Trieda ktorá pridáva vlastné prevodníky pre MongoDB na konverziu Java tried ktoré nie je možné
+     * priamo serializovať v MongoDB.</div>
+     * @return <div class="en">Instance of class MongoCustomConversions instantiated by list of
+     * custom MongoDB converters.</div>
+     * <div class="sk">Inštancia triedy MongoCustomConvertions vytvorená zoznamom vlastných MongoDB prevodníkov.</div>
      * @see MongoCustomConversions
      * @see org.springframework.data.convert.WritingConverter
      * @see org.springframework.data.convert.ReadingConverter

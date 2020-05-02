@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import stuba.fei.gono.java.nonblocking.services.EmployeeService;
 import stuba.fei.gono.java.pojo.Employee;
-import stuba.fei.gono.java.security.JwtUtils;
-
-import javax.validation.Valid;
+import stuba.fei.gono.java.nonblocking.security.JwtUtils;
 
 @RestController
 public class LoginController {
@@ -27,9 +25,11 @@ public class LoginController {
     }
 
     @PostMapping(value = "/login", consumes = "application/json")
-    public Mono<ResponseEntity<Object>> login(@RequestBody @Valid Employee employee)
+    public Mono<ResponseEntity<Object>> login(@RequestBody Employee employee)
     {
-        return employeeService.findEmloyeeByUsername(employee.getUsername()).map(
+
+            return   employeeService.validate(employee).then(
+                    employeeService.findEmployeeByUsername(employee.getUsername()).map(
                 user -> {
                     if(bCryptPasswordEncoder.matches(employee.getPassword(),user.getPassword()))
                     {
@@ -41,7 +41,7 @@ public class LoginController {
                     else
                         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 }
-        ).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        ).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
     }
 
 

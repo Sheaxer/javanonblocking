@@ -12,15 +12,20 @@ import stuba.fei.gono.java.errors.ReportedOverlimitTransactionNotFoundException;
 import java.util.*;
 
 /***
- * Class that implements custom error handling.
+ * <div class="en">Class that implements custom error handling.</div>
+ * <div class="sk">Trieda ktorá implementuje vlastné spravocanie výnimiek.</div>
  */
 @RestControllerAdvice
 public class ErrorHandler {
     /***
-     * Handles ReportedOverlimitTransactionNotFoundException  by returning the error code and sending HTTP code
-     * NOT_FOUND - 404.
-     * @param ex caught exception.
-     * @return Mono emitting the list containing the error message of ex.
+     * <div class="en">Handles ReportedOverlimitTransactionNotFoundException
+     * by returning the error code and sending HTTP code NOT_FOUND - 404.</div>
+     * <div class="sk">Spracováva ReportedOverlimitTransactionNotFoundException výnimku
+     * vrátením HTTP kódu 404 Not Found a chybovým kódom v tele správy.</div>
+     * @param ex <div class="en">caught exception.</div>
+     *           <div class="sk">odchytená výnimka.</div>
+     * @return <div class="en">Mono emitting the list containing the error message of ex.</div>
+     * <div class="sk">Mono emitujúce zoznam chybných kódov v odchytenej výnimke.</div>
      */
     @ExceptionHandler(ReportedOverlimitTransactionNotFoundException.class)
     @ResponseBody
@@ -29,8 +34,9 @@ public class ErrorHandler {
         return Mono.just(new ArrayList<>(Collections.singleton(ex.getMessage())));
     }
     /***
-     * Handles ReportedOverlimitTransactionBadRequestException by returning the error code and sending HTTP code
-     * BAD_REQUEST - 400.
+     * <div class="en">Handles ReportedOverlimitTransactionBadRequestException by returning
+     * the error code and sending HTTP code BAD_REQUEST - 400.</div>
+     * <div class="sk"></div>
      * @param ex caught exception.
      * @return Mono emitting the list containing the error message of ex.
      */

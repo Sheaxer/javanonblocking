@@ -1,4 +1,4 @@
-package stuba.fei.gono.java.security;
+package stuba.fei.gono.java.nonblocking.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

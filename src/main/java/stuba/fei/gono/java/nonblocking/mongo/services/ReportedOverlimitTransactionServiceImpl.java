@@ -12,6 +12,9 @@ import stuba.fei.gono.java.errors.ReportedOverlimitTransactionBadRequestExceptio
 import stuba.fei.gono.java.errors.ReportedOverlimitTransactionNotFoundException;
 import stuba.fei.gono.java.nonblocking.errors.ReportedOverlimitTransactionValidationException;
 import stuba.fei.gono.java.nonblocking.mongo.repositories.*;
+import stuba.fei.gono.java.nonblocking.services.AccountService;
+import stuba.fei.gono.java.nonblocking.services.ClientService;
+import stuba.fei.gono.java.nonblocking.services.OrganisationUnitService;
 import stuba.fei.gono.java.nonblocking.services.ReportedOverlimitTransactionService;
 import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.java.nonblocking.validation.ReportedOverlimitTransactionValidator;
@@ -34,25 +37,25 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     private EmployeeRepository employeeRepository;
     private ReportedOverlimitTransactionRepository transactionRepository;
     private ReportedOverlimitTransactionValidator validator;
-    private OrganisationUnitRepository organisationUnitRepository;
-    private ClientRepository clientRepository;
+    private OrganisationUnitService organisationUnitService;
+    private ClientService clientService;
     private NextSequenceService nextSequenceService;
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @Autowired
     public ReportedOverlimitTransactionServiceImpl(EmployeeRepository employeeRepository,
                                                    ReportedOverlimitTransactionRepository transactionRepository,
-                                                   OrganisationUnitRepository organisationUnitRepository,
-                                                   ClientRepository clientRepository,
+                                                   OrganisationUnitService organisationUnitService,
+                                                   ClientService clientService,
                                                    NextSequenceService nextSequenceService,
-                                                   AccountRepository accountRepository,
+                                                   AccountService accountService,
                                                    ReportedOverlimitTransactionValidator validator) {
         this.employeeRepository = employeeRepository;
         this.transactionRepository = transactionRepository;
         this.validator = validator;
-        this.organisationUnitRepository = organisationUnitRepository;
-        this.clientRepository = clientRepository;
-        this.accountRepository = accountRepository;
+        this.organisationUnitService = organisationUnitService;
+        this.clientService = clientService;
+        this.accountService = accountService;
         this.nextSequenceService = nextSequenceService;
     }
 
@@ -92,14 +95,17 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
      */
     @Override
     public Mono<ReportedOverlimitTransaction> postTransaction(ReportedOverlimitTransaction transaction) {
-        transaction.setModificationDate(OffsetDateTime.now());
-        return  test(transaction).then(nextSequenceService.getNewId(transactionRepository,sequenceName).flatMap(
-                newId ->
-                {
-                    transaction.setId(newId);
-                    return transactionRepository.save(transaction);
-                }
-        ).cast(ReportedOverlimitTransaction.class));
+        return Mono.just(transaction).flatMap( t-> {
+            t.setModificationDate(OffsetDateTime.now());
+            t.setState(State.CREATED);
+            return validate(t).then(nextSequenceService.getNewId(transactionRepository, sequenceName).flatMap(
+                    newId ->
+                    {
+                        t.setId(newId);
+                        return transactionRepository.save(t);
+                    }
+            ).cast(ReportedOverlimitTransaction.class));
+        });
     }
 
     /***
@@ -123,10 +129,18 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
      */
     @Override
     public Mono<ReportedOverlimitTransaction> putTransaction(String id, ReportedOverlimitTransaction transaction) {
-        transaction.setId(id);
-        transaction.setModificationDate(OffsetDateTime.now());
-        return test(transaction).then(nextSequenceService.needsUpdate(sequenceName,id)).
-                then(transactionRepository.save(transaction));
+        //transaction.setId(id);
+        //transaction.setModificationDate(OffsetDateTime.now());
+        return Mono.just(transaction).flatMap(
+                t ->
+                {
+                    t.setId(id);
+                    t.setModificationDate(OffsetDateTime.now());
+                    return validate(t).then(nextSequenceService.needsUpdate(sequenceName,id)).
+                            then(transactionRepository.save(t));
+                }
+        );
+
     }
 
     /***
@@ -135,7 +149,8 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
      * @return Mono emitting when the validation was performed.
      * @throws ReportedOverlimitTransactionValidationException exception containing validation errors.
      */
-    private Mono<Void> test(ReportedOverlimitTransaction transaction)
+    @Override
+    public Mono<Void> validate(ReportedOverlimitTransaction transaction)
             throws ReportedOverlimitTransactionValidationException
     {
         Mono<Boolean> cl;
@@ -160,7 +175,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
          Checks if Client referenced by cliendId field exists.
          */
         if(transaction.getClientId()!=null)
-            cl = clientRepository.existsById(transaction.getClientId());
+            cl = clientService.clientExistsById(transaction.getClientId());
         /* if clientId is null we don't want double error messages so we set Mono to emit true
          */
         else
@@ -169,7 +184,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
          * Checks if OrganisationUnit exists referenced by the organisationUnitID field.
          */
         if(transaction.getOrganisationUnitID() != null)
-            o = organisationUnitRepository.existsById(transaction.getOrganisationUnitID());
+            o = organisationUnitService.organisationUnitExistsById(transaction.getOrganisationUnitID());
         /* if organisationUnitID is null we don't want double error messages so we set Mono to emit true
          */
         else
@@ -187,7 +202,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
         {
             /* Account is identified by IBAN */
             if(transaction.getSourceAccount().getIban()!= null) {
-                activeAccount = accountRepository.findAccountByIban(transaction.getSourceAccount().getIban()).map(
+                activeAccount = accountService.getAccountByIban(transaction.getSourceAccount().getIban()).map(
                         t-> {
                             if(t.getIsActive() == null)
                                 return false;
@@ -197,7 +212,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                 ).switchIfEmpty(Mono.just(false));
                 /* Account is identified by Local Account Number */
             } else if(transaction.getSourceAccount().getLocalAccountNumber() != null) {
-                activeAccount = accountRepository.findAccountByLocalAccountNumber(transaction.getSourceAccount().getLocalAccountNumber()).map(
+                activeAccount = accountService.getAccountByLocalAccountNumber(transaction.getSourceAccount().getLocalAccountNumber()).map(
                         t->
                         {
                             if(t.getIsActive() == null)

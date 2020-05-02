@@ -14,7 +14,7 @@ public interface EmployeeService {
      * @param userName - User Name identifying the entity.
      * @return Mono emitting the entity or Mono.empty() if no entity was found.
      */
-    Mono<Employee> findEmloyeeByUsername(String userName);
+    Mono<Employee> findEmployeeByUsername(String userName);
     /***
      * Saves the entity.
      * @param employee entity to be saved.
@@ -27,5 +27,7 @@ public interface EmployeeService {
      * @return Mono emitting true if the entity was found, false otherwise.
      */
     Mono<Boolean> employeeExistsById(String id);
+
+    Mono<Void> validate(Employee employee);
 
 }

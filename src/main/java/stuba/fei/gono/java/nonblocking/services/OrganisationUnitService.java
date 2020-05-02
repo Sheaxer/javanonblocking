@@ -5,6 +5,7 @@ import stuba.fei.gono.java.pojo.OrganisationUnit;
 /***
  * Interface for marshalling and de-marshalling OrganisationUnit entities.
  */
+
 public interface OrganisationUnitService {
 
     Mono<OrganisationUnit> getOrganisationUnitById(String id);

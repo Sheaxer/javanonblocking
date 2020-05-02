@@ -1,31 +1,22 @@
-package stuba.fei.gono.java.security;
+package stuba.fei.gono.java.nonblocking.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.context.ServerSecurityContextRepository;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import reactor.core.publisher.Mono;
+import stuba.fei.gono.java.security.SecurityConstants;
 
 //@Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class SecurityConfigurationImpl {
 
-    private final SecurityContextRepository  securityContextRepository;
+    private final SecurityContextRepository securityContextRepository;
     private ReactiveAuthenticationManager reactiveAuthenticationManager;
 
     public SecurityConfigurationImpl(SecurityContextRepository  securityContextRepository,
@@ -50,7 +41,7 @@ public class SecurityConfigurationImpl {
                .authenticationManager(reactiveAuthenticationManager)
                .securityContextRepository(securityContextRepository)
                .authorizeExchange()
-               .pathMatchers(HttpMethod.POST,SecurityConstants.SIGN_UP_URL).permitAll()
+               .pathMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
                .pathMatchers(HttpMethod.POST,"/login").permitAll()
                .anyExchange().authenticated()
                .and().build();

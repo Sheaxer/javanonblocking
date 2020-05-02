@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 
 /***
- * Class that allows deserialization from JSON to an instance of OffsetDateTime
+ * Class that allows deserialization from JSON to an instance of OffsetDateTime.
+ *
+ * Trieda ktorá zabezpečuje de-serializáciu z JSON reťazca na inštanciu triedy OffsetDateTime.
  * @see OffsetDateTime
  * @see StdDeserializer
  */

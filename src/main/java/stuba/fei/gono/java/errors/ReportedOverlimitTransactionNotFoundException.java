@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /***
  * Custom Exception used when ReportedOverlimitTransaction entity is not found.
+ *
+ * Vlastná výnimka vyvolaná keď entita nebola nájdená.
  */
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 @ResponseBody

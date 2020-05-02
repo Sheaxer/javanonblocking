@@ -57,7 +57,7 @@ public class ReportedOverlimitTransactionController {
     public Mono<ReportedOverlimitTransaction> postTransaction( @RequestBody ReportedOverlimitTransaction newTransaction)
     throws ReportedOverlimitTransactionValidationException
     {
-        newTransaction.setModificationDate(OffsetDateTime.now());
+
       return  transactionService.postTransaction(newTransaction);
               /*.onErrorResume(throwable -> throwable instanceof ReportedOverlimitTransactionValidationException,
               throwable -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -78,7 +78,7 @@ public class ReportedOverlimitTransactionController {
                                                              @RequestBody ReportedOverlimitTransaction transaction)
     throws ReportedOverlimitTransactionValidationException
     {
-        transaction.setModificationDate(OffsetDateTime.now());
+
         return transactionService.putTransaction(id, transaction);
     }
 

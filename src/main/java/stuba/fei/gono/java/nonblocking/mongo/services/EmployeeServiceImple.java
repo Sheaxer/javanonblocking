@@ -48,7 +48,7 @@ public class EmployeeServiceImple implements EmployeeService {
      * @return Mono emitting the Employee of Mono.empty() if none found.
      */
     @Override
-    public Mono<Employee> findEmloyeeByUsername(String userName) {
+    public Mono<Employee> findEmployeeByUsername(String userName) {
         return employeeRepository.findByUsername(userName);
     }
 
@@ -89,7 +89,8 @@ public class EmployeeServiceImple implements EmployeeService {
         return employeeRepository.existsById(id);
     }
 
-    private Mono<Void> validate(Employee employee)
+    @Override
+    public Mono<Void> validate(Employee employee)
     {
        return Mono.just(employee).flatMap(
                 e -> {
