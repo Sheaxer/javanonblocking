@@ -16,7 +16,7 @@ import java.util.List;
 
 /***
  * <div class="en">Configuration class that modifies default configuration of MongoDB.</div>
- * <div class="sk>Konfiguračná trieda, ktorá modifikuje predvolenú konfiguráciu MongoDB.</div>
+ * <div class="sk">Konfiguračná trieda, ktorá modifikuje predvolenú konfiguráciu MongoDB.</div>
  */
 @Configuration
 public class MongoConfig {

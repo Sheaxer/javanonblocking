@@ -64,7 +64,7 @@ public interface ReportedOverlimitTransactionService {
       * Mono.error() constaining ReportedOverlimitTransactionNotFoundException
       * if the entity with given id was not found or Mono.error() containing
       * ReportedOverlimitTransactionBadRequestException if the
-      * entity couldn't be deleted because its state is State.CLOSED.
+      * entity couldn't be deleted because its state is State.CLOSED.</div>
       * <div class="sk">Mono emitujúce ak operácia prebehla, Mono.error() obsahujúce
       * ReportedOverlimitTransactionNotFoundException výnimku ak entita so zadaným id neexistuje
       * alebo Mono.error() obsahujúce ReportedOverlimitTransactionBadRequestException ak entita nemôže byť vymazaná,
@@ -79,7 +79,7 @@ public interface ReportedOverlimitTransactionService {
       * <div class="sk">Skontroluje či entita je korektná.</div>
       * @param transaction <div class="en">entity to be validated.</div>
       *                    <div class="sk">entita, ktorá má byť validovaná.</div>
-      * @return <div class="en">Mono emitting that the operation completed or Mono.error() containing </div>
+      * @return <div class="en">Mono emitting that the operation completed or Mono.error() containing
       * ReportedOverlimitTransactionValidationException with the failed validation error codes.</div>
       * <div class="sk">Mono emitujúce informáciu, že operácia prebehla ak entita bola korektná alebo
       * Mono.error() obsahujúca ReportedOverlimitTransactionValidationException výnimku s validačnými

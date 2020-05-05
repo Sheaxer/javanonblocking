@@ -74,14 +74,14 @@ public class ErrorHandler {
     }*/
 
     /***
-     * <div class="en>Handles validation errors that occur during put and post REST methods. Returns
+     * <div class="en">Handles validation errors that occur during put and post REST methods. Returns
      * HTTTp code BAD_REQUEST - 400 and list of validation errors.</div>
      * <div class="sk">Spracuváva validačné výnimky ktoré môžu nastať počas PUT a POST REST metód. Vracia
      * HTTP kód BAD_REQUEST - 400 a zoznam validačných chýb v tele odpovede.</div>
      * @see ReportedOverlimitTransactionValidationException
      * @see stuba.fei.gono.java.nonblocking.validation.ReportedOverlimitTransactionValidator
      * @param ex <div class="en">exception containing errors that were discovered during validation.</div>
-     *           <div class="sk"*>výnimka obsahujúca zoznam chybných hlášok zistených počas validácie.</div>
+     *           <div class="sk">výnimka obsahujúca zoznam chybných hlášok zistených počas validácie.</div>
      * @return <div class="en">Mono emitting a List of errors discovered during validation.</div>
      * <div class="sk">Mono emitujúce zoznam chybových hlášok zistených počas validácie.</div>
      *

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /***
  * <div class="en">Custom Exception used when ReportedOverlimitTransaction entity is not found.</div>
- * <div class="sk>Vlastná výnimka vyvolaná keď entita nebola nájdená.</div>
+ * <div class="sk">Vlastná výnimka vyvolaná keď entita nebola nájdená.</div>
  */
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 @ResponseBody

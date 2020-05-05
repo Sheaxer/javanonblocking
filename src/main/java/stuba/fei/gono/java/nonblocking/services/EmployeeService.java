@@ -33,7 +33,7 @@ public interface EmployeeService {
      * <div class="sk">Skontroluje či entita so zadaným id existuje.</div>
      * @param id <div class="en">id of the entity, must not be null.</div>
      *           <div class="sk">id entity, nesmie byť null.</div>
-     * @return <div class="en">Mono emitting true if the entity was found, false otherwise.
+     * @return <div class="en">Mono emitting true if the entity was found, false otherwise.</div>
      * <div class="sk">Mono emitujúce true ak entita bola nájdená, inak false.</div>
      */
     Mono<Boolean> employeeExistsById(String id);

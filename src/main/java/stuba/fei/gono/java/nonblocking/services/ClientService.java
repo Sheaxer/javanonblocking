@@ -19,9 +19,9 @@ public interface ClientService {
     /***
      * <div class="en">Checks if the entity with the given id was found.</div>
      * <div class="sk">Skontroluje, či entita so zadaným id existuje.</div>
-     * @param id <div class="en>id of the entity, must not be null</div>
+     * @param id <div class="en">id of the entity, must not be null.</div>
      *           <div class="sk">id entity, nesmie byť null.</div>
-     * @return <div class="en"><div class="en">Mono emitting true if the entity was found,
+     * @return <div class="en">Mono emitting true if the entity was found,
      * false otherwise.</div>
      * <div class="sk">Mono emitujúce true ak entita existuje, false inak.</div>
      */

@@ -10,7 +10,7 @@ import stuba.fei.gono.java.pojo.Account;
 /***
  * <div class="en">Implementation of service that manages marshalling and de-marshalling Account objects using CRUD
  * operations and AccountRepository instance.</div>
- * <div class="sk>Implementácia služby ktorá spravuje marshalling a de-marhalling objektov triedy Account
+ * <div class="sk">Implementácia služby ktorá spravuje marshalling a de-marhalling objektov triedy Account
  * pomocou CRUD operácii a inštanciu rozhrania AccountRepository</div>
  * @see org.springframework.data.repository.reactive.ReactiveCrudRepository
  * @see AccountRepository

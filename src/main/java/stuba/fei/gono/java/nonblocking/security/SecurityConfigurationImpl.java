@@ -19,7 +19,6 @@ import stuba.fei.gono.java.security.SecurityConstants;
  * without authorization, and requires valid JWT to access every other endpoint.</div>
  * <div class="sk">Trieda, ktorá nastavuje webovú bezpečnosť - povolí prístup cez POST operáciu na endpoint-y
  * /login a /signup, a nastaví vyžadovanie správneho JWT pre prístup k ostatným endpoint-om.</div>
- * </div>
  */
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity

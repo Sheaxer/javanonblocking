@@ -8,7 +8,7 @@ import stuba.fei.gono.java.pojo.Account;
 /***
  * <div class="en">Interface extending ReactiveCrudRepository for Account entities. Automatically
  * instantiated by Spring</div>
- * <div class="sk>Rozhranie rozširujúce ReactiveCrudRepository pre entity triedy Account. Automaticky inštanciované
+ * <div class="sk">Rozhranie rozširujúce ReactiveCrudRepository pre entity triedy Account. Automaticky inštanciované
  * pomocou Spring.</div>
  * @see Account
  * @see org.springframework.data.repository.reactive.ReactiveCrudRepository

@@ -87,7 +87,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     /***
      * <div class="en">Service used to verify if the sourceAccount property references an
      * existing Account entity.</div>
-     * <div class="sk>Služba použitá na verifikáciu, či sourceAccount premenná referencuje skutočnú entitu triedy
+     * <div class="sk"> Služba použitá na verifikáciu, či sourceAccount premenná referencuje skutočnú entitu triedy
      * Account.</div>
      */
     private AccountService accountService;
@@ -219,7 +219,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     /***
      * <div class="en">Performs the validation of entity before saving it in either PUT or POST method.
      * Sets up a Tuple5 of monos emitting results from validator and services and calls apply method with
-     * this Tuple5 as the parameter.
+     * this Tuple5 as the parameter.</div>
      * <div class="sk">Vykoná validáciu entity pred jej uložením v PUT alebo POST metóde. Nastaví Tuple5 Mono-v
      * ktoré emitujú výstupy z validátora a služieb a zavolá metódu apply s týmto Tuple5</div>
      * @param transaction <div class="en">entity to be validated.</div>
