@@ -7,33 +7,35 @@ import stuba.fei.gono.java.nonblocking.mongo.repositories.OrganisationUnitReposi
 import stuba.fei.gono.java.nonblocking.services.OrganisationUnitService;
 import stuba.fei.gono.java.pojo.OrganisationUnit;
 
-/*** MongoDB implementation of service that handles marshalling and de-marshalling  OrganisationUnit objects.
- *
+/***
+ * <div class="en">Implementation of service that manages marshalling and de-marshalling
+ * OrganisationUnit entities using CRUD operations and OrganisationUnitRepository instance.</div>
+ * <div class="sk">Implementácia služby ktorá spravuje marshalling a de-marshalling entít triedy OrganisationUnit
+ * pomocou CRUD operácií a inštanciou rozhrania OrganisationUnitRepository. </div>
+ * @see org.springframework.data.repository.reactive.ReactiveCrudRepository
+ * @see OrganisationUnitRepository
  */
 @Service
 public class OrganisationUnitServiceImpl  implements OrganisationUnitService {
 
+    /***
+     * <div class="en">Repository that provides CRUD operations on OrganisationUnit entities.</div>
+     * <div class="sk">Repozitár ktorý poskytuje CRUD operácie nad entitami triedy OrganisationUnit.</div>
+     * @see org.springframework.data.repository.reactive.ReactiveCrudRepository
+     */
     private final OrganisationUnitRepository organisationUnitRepository;
 
     public OrganisationUnitServiceImpl(OrganisationUnitRepository organisationUnitRepository) {
         this.organisationUnitRepository = organisationUnitRepository;
     }
 
-    /***
-     * Retrieves the OrganisationUnit with given id.
-     * @param id - must not be null
-     * @return Mono emitting the OrganisationUnit or Mono.empty() if none found.
-     */
+
     @Override
     public Mono<OrganisationUnit> getOrganisationUnitById(String id) {
         return organisationUnitRepository.findById(id);
     }
 
-    /***
-     * Checks if OrganisationUnit with given id exists.
-     * @param id - must not be null.
-     * @return Mono emitting OrganisationUnit with the given id or Mono.empty() if none found.
-     */
+
     @Override
     public Mono<Boolean> organisationUnitExistsById(String id) {
         return organisationUnitRepository.existsById(id);

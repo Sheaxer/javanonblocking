@@ -1,5 +1,6 @@
 package stuba.fei.gono.java.nonblocking.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -12,13 +13,22 @@ import reactor.core.publisher.Mono;
 import stuba.fei.gono.java.security.SecurityConstants;
 
 //@Configuration
+
+/***
+ * <div class="en">Class setting up web security - exposes POST operation access to endpoint /login and to /signup
+ * without authorization, and requires valid JWT to access every other endpoint.</div>
+ * <div class="sk">Trieda, ktorá nastavuje webovú bezpečnosť - povolí prístup cez POST operáciu na endpoint-y
+ * /login a /signup, a nastaví vyžadovanie správneho JWT pre prístup k ostatným endpoint-om.</div>
+ * </div>
+ */
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class SecurityConfigurationImpl {
 
     private final SecurityContextRepository securityContextRepository;
-    private ReactiveAuthenticationManager reactiveAuthenticationManager;
+    private final ReactiveAuthenticationManager reactiveAuthenticationManager;
 
+    @Autowired
     public SecurityConfigurationImpl(SecurityContextRepository  securityContextRepository,
                                      ReactiveAuthenticationManager reactiveAuthenticationManager) {
         this.securityContextRepository = securityContextRepository;
@@ -27,16 +37,23 @@ public class SecurityConfigurationImpl {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-
+        /* handle exceptions during authorization */
       return http.exceptionHandling()
+              /* no authorization attempted */
                .authenticationEntryPoint(((serverWebExchange, e) ->
                        Mono.fromRunnable(() ->
+                               /* return HTTP CODE UNAUTHORIZED */
                                serverWebExchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED)))).
+                      /* authorization failed */
                       accessDeniedHandler((serverWebExchange, e) -> Mono.fromRunnable(()->
+                              /* return HTTP CODE FORBIDDEN  */
                               serverWebExchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN)))
               .and()
+              /* disables CSRF */
                .csrf().disable()
+              /* disables formLogin */
                .formLogin().disable()
+              /* disables http basic authentication */
                .httpBasic().disable()
                .authenticationManager(reactiveAuthenticationManager)
                .securityContextRepository(securityContextRepository)

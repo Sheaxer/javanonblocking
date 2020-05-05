@@ -1,6 +1,5 @@
 package stuba.fei.gono.java.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 
 /***
- * Class representing data about bank employee and the system user.
+ * <div class="en">Class representing data about bank employee and the system user.</div>
+ * <div class="sk">Trieda reprezentujúca dáta o zamestnanca banky, ktorý je zároveň používateľom systému.</div>
  */
 @Data
 @NoArgsConstructor

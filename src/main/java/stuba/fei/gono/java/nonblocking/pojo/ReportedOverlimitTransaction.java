@@ -19,7 +19,10 @@ import java.util.Date;
 import java.util.List;
 
 /***
- * Class representing ReportedOverlimitTransaction from FENiX - New FrontEnd solution API definition.
+ * <div class="en">Class representing ReportedOverlimitTransaction from FENiX - New FrontEnd solution API definition.
+ * </div>
+ * <div class="sk">Trieda reprezentujúca ReportedOverlimitTransaction z FENix - New FrontEnd solution API definition
+ * </div>
  */
 @Data
 @NoArgsConstructor

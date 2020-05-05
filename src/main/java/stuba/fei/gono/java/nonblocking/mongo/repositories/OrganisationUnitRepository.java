@@ -4,7 +4,10 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import stuba.fei.gono.java.pojo.OrganisationUnit;
 /***
- * Interface extending ReactiveMongoRepository for OrganisationUnit entities.
+ * <div class="en">Interface extending ReactiveCrudRepository for OrganisationUnit entities. Automatically
+ * instantiated by Spring.</div>
+ * <div class="sk">Rozhranie rozširujúce ReactiveCrudRepository pre entity triedy OrganisationUnit. Automaticky
+ * inštanciované pomocou Spring.</div>
  * @see OrganisationUnit
  * @see org.springframework.data.repository.reactive.ReactiveCrudRepository
  */

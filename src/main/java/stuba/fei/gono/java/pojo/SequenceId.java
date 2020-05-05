@@ -4,17 +4,23 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /***
- * Class holding data about custom sequences in MongoDB, used to store maximal used id for auto id generation.
+ * <div class="en">Class holding data about custom sequences in MongoDB,
+ * used to store maximal used id for auto id generation.</div>
+ * <div class="sk">Trieda uchovávajúca dáta o vlastný sekvenciách
+ * v MongoDB použitých na uloženie maximálnej hodnoty id použitého na automatickú
+ * id generáciu.</div>
  */
 @Document(collection = "customSequences")
 public class SequenceId {
     /***
-     * Name of the sequence
+     * <div class="en">Name of the sequence</div>
+     * <div class="sk">Názov sekvencie</div>
      */
     @Id
     private String id;
     /***
-     * Maximal value of id used to save entities.
+     * <div class="en"> Maximal value of id used to save an entity.</div>
+     * <div class="sk">Maximálne hodnota id použitá na uloženie entity.</div>
      */
     private long seq;
 

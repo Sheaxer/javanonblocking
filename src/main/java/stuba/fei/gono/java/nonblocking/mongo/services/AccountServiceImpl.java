@@ -8,11 +8,20 @@ import stuba.fei.gono.java.nonblocking.services.AccountService;
 import stuba.fei.gono.java.pojo.Account;
 
 /***
- * MongoDB implementation of service that manages marshalling and de-marshalling Account objects.
+ * <div class="en">Implementation of service that manages marshalling and de-marshalling Account objects using CRUD
+ * operations and AccountRepository instance.</div>
+ * <div class="sk>Implementácia služby ktorá spravuje marshalling a de-marhalling objektov triedy Account
+ * pomocou CRUD operácii a inštanciu rozhrania AccountRepository</div>
+ * @see org.springframework.data.repository.reactive.ReactiveCrudRepository
+ * @see AccountRepository
  */
 @Service
 public class AccountServiceImpl implements AccountService {
-
+    /***
+     * <div class="en">Repository providing CRUD operations on Account entities.</div>
+     * <div class="sk">Repozitár poskytujúce CRUD operácie nad entitami triedy Account.</div>
+     * @see org.springframework.data.repository.reactive.ReactiveCrudRepository
+     */
     private final AccountRepository accountRepository;
 
     @Autowired
@@ -20,21 +29,13 @@ public class AccountServiceImpl implements AccountService {
         this.accountRepository = accountRepository;
     }
 
-    /***
-     * Retrieves the Account  identified by IBAN
-     * @param iban IBAN of desired Account, must not be null.
-     * @return Mono emitting the Account identified by given IBAN or Mono.empty() if none found.
-     */
+
     @Override
     public Mono<Account> getAccountByIban(String iban) {
         return accountRepository.findAccountByIban(iban);
     }
 
-    /***
-     * Retrieves the entity  identified by a local account number.
-     * @param number Local Account Number of desired Account
-     * @return Mono of Account identified by the given Local account number or Mono.empty() if none found.
-     */
+
     @Override
     public Mono<Account> getAccountByLocalAccountNumber(String number) {
         return accountRepository.findAccountByLocalAccountNumber(number);

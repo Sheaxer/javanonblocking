@@ -8,11 +8,11 @@ import java.time.ZoneOffset;
 import java.util.Date;
 
 /***
- * Custom converter for transforming object of Date class to OffsetDateTime object with offset UTC.
- * Needed because MongoDB cannot serialize objects of OffsetDateTime class.
- *
- * Vlastný prevodník na transformáciu objektu triedy Date na objekt OffsetDateTime s ofsetom UTC.
- * Potrebné, pretože MongoDB nemôže priamo serializovať objekty triedy OffsetDateTime.
+ * <div class="en">Custom converter for transforming object of Date class
+ * to OffsetDateTime object with offset UTC.
+ * Needed because MongoDB cannot serialize objects of OffsetDateTime class.</div>
+ * <div class="sk">Vlastný prevodník na transformáciu objektu triedy Date na objekt OffsetDateTime s ofsetom UTC.
+ * Potrebné, pretože MongoDB nemôže priamo serializovať objekty triedy OffsetDateTime.</div>
  * @see OffsetDateTime
  * @see Date
  * @see ReadingConverter

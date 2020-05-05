@@ -6,7 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /***
- * Class holding data about organisation unit.
+ * <div class="en">Class maintaining data about organisation unit.</div>
+ * <div class="sk">Trieda, ktorá uchováva dáta o mieste výberu.</div>
  */
 @Data
 @NoArgsConstructor

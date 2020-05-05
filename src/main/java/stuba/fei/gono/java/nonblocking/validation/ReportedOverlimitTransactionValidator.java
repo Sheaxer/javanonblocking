@@ -10,8 +10,11 @@ import stuba.fei.gono.java.pojo.Currency;
 import stuba.fei.gono.java.pojo.OrderCategory;
 
 /***
- * Class implementing validaiton of ReportedOverlimitTransaction according to
- * FENiX - New FrontEnd solution API definition (version 0.1)
+ * <div class="en">Class implementing validaiton of ReportedOverlimitTransaction according to
+ * FENiX - New FrontEnd solution API definition (version 0.1)</div>
+ * <div class="sk">Trieda implementuje Validator rozhranie a validáciu inštancií tried
+ * ReportedOverlimitTransaction podľa definície  FENiX - New FrontEnd solution API definition (version 0.1)</div>
+ *
  * @see ReportedOverlimitTransaction
  */
 @Component

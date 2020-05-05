@@ -8,32 +8,35 @@ import stuba.fei.gono.java.nonblocking.services.ClientService;
 import stuba.fei.gono.java.pojo.Client;
 
 /***
- *MongoDB implementation of service that handles marshalling and de-marshalling Client objects.
+ * <div class="en">Implementation of service that manages
+ * marshalling and de-marshalling Client objects using CRUD operations and ClientRepository
+ * instance.</div>
+ * <div class="sk">Implementácia služby ktorá spravuje marshalling a de-marshalling objektov triedy Client
+ * pomocou CRUD operácií a inštanciu rozhrania ClientRepository.</div>
+ * @see org.springframework.data.repository.reactive.ReactiveCrudRepository
+ * @see ClientRepository
  */
 @Service
 public class ClientServiceImpl implements ClientService {
-
+    /***
+     * <div class="en">Repository providing CRUD operations on Client entities.</div>
+     * <div class="sk">Repozitár poskytujúce CRUD operácíe nad entitami triedy Client.</div>
+     * @see org.springframework.data.repository.reactive.ReactiveCrudRepository
+     */
     private final ClientRepository clientRepository;
 
+    @Autowired
     public ClientServiceImpl(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
-    /***
-     * Finds Client entity with the given id.
-     * @param id must not be null.
-     * @return Mono emitting the Client with the given id or Mono.empty() if none found.
-     */
+
     @Override
     public Mono<Client> getClientById(String id) {
         return clientRepository.findById(id);
     }
 
-    /***
-     * Checks if entity with the given id is exists.
-     * @param id id of client
-     * @return Mono emitting true if Client with the given id exists, false otherwise.
-     */
+
     @Override
     public Mono<Boolean> clientExistsById(String id) {
         return clientRepository.existsById(id);

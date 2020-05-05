@@ -1,7 +1,8 @@
 package stuba.fei.gono.java.pojo;
 
 /***
- * Enum representing type of tender.
+ * <div class="en">Enum representing type of tender.</div>
+ * <div class="en">Enum predstavujúci typ tendra.</div>
  */
 public enum VaultType {
     BANKNOTE,

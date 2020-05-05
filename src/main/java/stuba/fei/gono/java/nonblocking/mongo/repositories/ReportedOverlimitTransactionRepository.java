@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 
 /***
- * Interface extending ReactiveMongoRepository for ReportedOverlimitTransaction entities.
+ * <div class="en">Interface extending ReactiveCrudRepository for ReportedOverlimitTransaction entities.
+ * Automatically instantiated by Spring.</div>
+ * <div class="sk">Rozhranie rozširujúce ReactiveCrudRepository pre entity triedy ReportedOverlimitTransaction.
+ *  Automaticky inštanciované pomocou Spring.</div>
  * @see ReportedOverlimitTransaction
  * @see org.springframework.data.repository.reactive.ReactiveCrudRepository
  */

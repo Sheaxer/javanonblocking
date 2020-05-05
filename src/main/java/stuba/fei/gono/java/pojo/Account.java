@@ -8,7 +8,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /***
- * Class representing a banking account.
+ * <div class="en">Class representing a banking account.</div>
+ * <div class="sk">Trieda reprezentujúca bankový účet.</div>
  */
 @Data
 @NoArgsConstructor

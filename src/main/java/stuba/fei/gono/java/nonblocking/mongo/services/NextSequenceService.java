@@ -21,7 +21,9 @@ import static org.springframework.data.mongodb.core.FindAndModifyOptions.options
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 /***
- * Service that generates next id value for storing data in MongoDB.
+ * <div class="en">Service that generates next id value for storing data in MongoDB.</div>
+ * <div class="sk">Služba, ktorá generuje nasledujúcu hodnotu id použitú na uloženie entity do Mongo databázy.
+ * </div>
  */
 @Slf4j
 @Service
@@ -35,10 +37,14 @@ public class NextSequenceService {
     }
 
     /***
-     * Increments the value of sequence with the given sequence name and return it.
+     * <div class="en">Increments the value of sequence with the given
+     * sequence name and return it.</div>
+     * <div class="sk">Inkrementuje hodnotu sekvencie so zadaným menom.</div>
      * @see SequenceId
-     * @param seqName - name of the sequence.
-     * @return - updated value of the sequence.
+     * @param seqName <div class="en">name of the sequence.</div>
+     *                <div class="sk">názov sekvencie.</div>
+     * @return <div class="en">updated value of the sequence.</div>
+     * <div class="sk">aktualizovná hodnota sekvencie.</div>
      */
     private Mono<String> getNextSequence(@NotNull String seqName)
     {
@@ -65,11 +71,15 @@ public class NextSequenceService {
     }
 
     /***
-     * Sets value of sequence in MongoDB.
+     * <div class="en">Sets value of sequence with the given name.</div>
+     * <div class="sk">Nastaví hodnotu sekvencie so zadaným názvom.</div>
      * @see SequenceId
-     * @param seqName name of the sequence,
-     * @param value value that the sequence will be set to.
-     * @return Mono containing SequenceId with modified value.
+     * @param seqName <div class="en">name of the sequence.</div>
+     *                <div class="sk">názov sekvencie.</div>
+     * @param value <div class="en">value that the sequence will be set to.</div>
+     *              <div class="sk">hodnota na ktorú sa sekvencia nastaví.</div>
+     * @return <div class="en">Mono emitting the SequenceId with modified value.</div>
+     * <div class="sk">Mono emitujúce objekt triedy SequenceId s modifikovanou hodnotou.</div>
      */
     public Mono<SequenceId> setNextSequence(@NotNull String seqName,@NotNull String value)
     {
@@ -86,13 +96,23 @@ public class NextSequenceService {
     }
 
     /***
-     * Retrieves new value of an id for saving new object in a repository. Updates maximal value
+     * <div class="en">Generates a new value of an id for saving new object in a database.
+     * Updates maximal value
      * of sequence with the given name, checks if an entity with this id already exists in the repository.
      * If it does exist, function finds the actual maximal value of id used to store entities in the repository and
-     * updates the sequence.
-     * @param rep repository where the object will be saved.
-     * @param sequenceName name of the sequence holding the id of last saved object.
-     * @return value of id that should be used to save object in the given repository.
+     * updates the sequence.</div>
+     * <div class="sk">Generuje novú hodnotu id na uloženie nového objektu do databázy. Aktualizuje
+     * maximálnu hodnotu sekvencie so zadaným menom, skontroluje či už existuje entita so zadaným id. Ak existuje,
+     * využije ďalšiu metódu na získanie skutočnej maximálnej hodnoty id v zadanom repozitáry a aktualizuje hodnotu
+     * sekvencie.</div>
+     * @param rep <div class="en">repository where the object will be saved.</div>
+     *            <div class="sk">repozitár v ktorom bude objekt uložený.</div>
+     * @param sequenceName <div class="en">name of the sequence holding the id of last saved object.</div>
+     *                     <div class="sk">názov sekvencie ktorá udržiava id posledného uloženého objektu.</div>
+     * @return <div class="en">Mono emitting the value of id that should be used to save object in
+     * the given repository.</div>
+     * <div class="sk">Mono emitujúce hodntotu id ktoré by malo byť použité na uloženie
+     * objektu v zadanom repozitári.</div>
      */
     public Mono<String> getNewId(@NotNull ReactiveCrudRepository<?,String> rep, @NotNull String sequenceName)
     {
@@ -103,8 +123,8 @@ public class NextSequenceService {
                         rep.existsById(e).map(
                                   t ->
                                   {
-                                      log.info("wasModified");
-                                      log.info(t.toString());
+                                      //log.info("wasModified");
+                                      //log.info(t.toString());
                                       if (t) {
                                           String tmpId = "";
                                           if (rep instanceof ReportedOverlimitTransactionRepository) {
@@ -119,7 +139,7 @@ public class NextSequenceService {
                                               tmpId = lastId(Account.class);
                                           //newId = this.getNextSequence(sequenceName);
                                           this.setNextSequence(sequenceName, tmpId).subscribe();
-                                          log.info("wasModified");
+                                          //log.info("wasModified");
                                           return tmpId;
                                       } else
                                           return e;
@@ -129,17 +149,21 @@ public class NextSequenceService {
     }
 
     /***
-     * Calculates the maximal id that was used to save an object in the given repository.
-     * Transforms ids of all entities of the given class into long and finds the max.
-     * @param rep repository, must not be null.
-     * @return String value of the maximal id in the given repository.
+     * <div class="en">Calculates the maximal id that was used to save an object of the given class.
+     * Transforms ids of all entities of the given class into long and finds the maximal value.</div>
+     * <div class="sk">Získa maximálnu hodnotu id ktoré bolo použité na uloženie objektu zadanej triedy.
+     * Transformuje id všetkých entít triedy do typu long a získa maximálnu hodnotu.</div>
+     * @param rep <div class="en">class of the entities, must not be null.</div>
+     *            <div class="sk">trieda entít, nesmie byť null.</div>
+     * @return <div class="en">string value of the maximal id of saved entity of the given class.</div>
+     * <div class="sk">hodnota maximálneho id použitého na uloženie entity zadanej triedy.</div>
      */
     private String lastId(@NotNull Class<?> rep)
     {
         return mongoOperations.execute(rep, mongoCollection -> {
+            // finds id field of entites in the repository
             FindIterable<Document> doc= mongoCollection.find().projection(Projections.include("_id"));
-            Long max=0L;
-
+            //transforms id field to long
             MongoIterable<Long> s = doc.map(document ->
             {
                 try{
@@ -151,20 +175,30 @@ public class NextSequenceService {
                 }
 
             });
+            //finds the max value
             Long lastVal=0L;
             for (Long tmp : s) {
                 lastVal = tmp > lastVal ? tmp : lastVal;
             }
             lastVal++;
+            //returns string
             return String.valueOf(lastVal);
         });
     }
 
     /***
-     * Checks if the sequence with given name needs to update its maximal id value by the given value.
-     * @param seqName - name of the sequence, must not be null.
-     * @param val - value to be checked against maximal id value, must not be null.
-     * @return Mono emitting when the operation was completed.
+     * <div class="en">Checks if the sequence with given name needs to update
+     * its maximal value. If the given value is larger than the maximal value stored in
+     * the sequence with the given name, it sets it to the new value.</div>
+     * <div class="sk">Skontroluje, či sekvencia so zadaným názvom potrebuje aktualizovať
+     * maximálnu hodnotu id. Ak je zadaná hodnota väčšia ako uložená maximálna hodnota, nastaví
+     * sa táto uložená hodnota na novú.</div>
+     * @param seqName <div class="en">name of the sequence, must not be null.</div>
+     *                <div class="sk">názov sekvencie, nesmie byť null.</div>
+     * @param val <div class="en">value to be checked against maximal id value, must not be null.</div>
+     *            <div class="sk">hodnota oproti ktorej sa uložená maximálna hodnota porovná.</div>
+     * @return <div class="en">Mono emitting when the operation was completed.</div>
+     * <div class="sk">Mono emitujúce keď sa operácia uskutoční.</div>
      */
     public Mono<Void> needsUpdate(String seqName, String val)
     {

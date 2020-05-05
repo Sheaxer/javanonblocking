@@ -6,8 +6,10 @@ import org.springframework.validation.Validator;
 import stuba.fei.gono.java.pojo.AccountNO;
 
 /***
- * Class implementing validation of AccounNO - must have either a IBAN or Local Account Number, otherwise the validator
- * rejects the AccountNO with error message "INVALID_ACCOUNT".
+ * <div class="en">Class implementing validation of AccountNO - must have either a IBAN or Local Account Number,
+ * otherwise the validator rejects the AccountNO with error message "INVALID_ACCOUNT".</div>
+ * <div class="sk">Trieda implementuje validáciu objektu triedy AccountNO - musí obsahovať
+ * buď IBAN alebo lokálne číslo účtu, inak validátor zamietne objekt s chybovou správou "INVALID_ACCOUNT".</div>
  */
 @Component
 public class AccountValidator implements Validator {

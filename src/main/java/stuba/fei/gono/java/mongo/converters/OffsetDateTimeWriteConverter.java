@@ -7,11 +7,13 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 
 /***
- * Custom converter for MongoDB that converts instance of OffsetDateTime class to instance of Date class.
- * Needed because MongoDB cannot deserialize object of OffsetDateTime class.
- *
- * Vlastný prevodník pre MongoDB, ktorý prevádza inštanciu triedy OffsetDateTime na inštanciu triedy Date.
- * Potrebné, pretože MongoDB nemôže priamo deserializovať objekt triedy OffsetDateTime iba objekt triedy Date.
+ * <div class="en">Custom converter for MongoDB that converts instance of OffsetDateTime class
+ * to instance of Date class.
+ * Needed because MongoDB cannot deserialize object of OffsetDateTime class.</div>
+ * <div class="sk">Vlastný prevodník pre MongoDB, ktorý prevádza inštanciu
+ * triedy OffsetDateTime na inštanciu triedy Date.
+ * Potrebné, pretože MongoDB nemôže priamo deserializovať objekt
+ * triedy OffsetDateTime iba objekt triedy Date.</div>
  * @see OffsetDateTime
  * @see Date
  * @see WritingConverter

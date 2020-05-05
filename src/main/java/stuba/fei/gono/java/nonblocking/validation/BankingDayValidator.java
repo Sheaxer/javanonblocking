@@ -8,7 +8,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 /***
- * Class implementing validator of valid banking date. Currently any date that is not on weekend is valid.
+ * <div class="en">Class implementing Validator interface - checks if date is a valid banking date.
+ * Currently any date that is not on weekend is valid.</div>
+ * <div class="sk">Trieda ktorá implementuje rozhranie Validator - kontroluje, či
+ * dátum je platný bankovný deň. V súčasnosi každý deň ktorý nie je víkendový, je platný.</div>
  */
 @Component
 public class BankingDayValidator implements Validator {

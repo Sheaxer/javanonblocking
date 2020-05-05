@@ -12,7 +12,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /***
- * Class representing data about a bank client.
+ * <div class="en">Class representing data about a bank client.</div>
+ * <div class="sk">Trieda reprezentujúca dáta o bankovom klientovi.</div>
  */
 @Data
 @NoArgsConstructor

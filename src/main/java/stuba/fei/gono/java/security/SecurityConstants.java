@@ -2,6 +2,11 @@ package stuba.fei.gono.java.security;
 
 import org.springframework.beans.factory.annotation.Value;
 
+/***
+ * <div class="en">Class holding constants used in security implementation</div>
+ * <div class="sk">Trieda, ktorá udržiava konštanty použité v implementácii
+ * bezpečnosti.</div>
+ */
 public class SecurityConstants {
     @Value("${security.jwt.token.expire-length:864_000_000}")
     public static final long EXPIRE_LENGTH = 864_000_000;
