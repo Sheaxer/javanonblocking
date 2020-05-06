@@ -17,7 +17,6 @@ import java.time.format.DateTimeFormatter;
  * @see OffsetDateTime
  * @see StdSerializer
  */
-@Slf4j
 public class OffsetDateTimeSerializer extends StdSerializer<OffsetDateTime> {
     protected OffsetDateTimeSerializer(Class<OffsetDateTime> t) {
         super(t);
@@ -32,8 +31,6 @@ public class OffsetDateTimeSerializer extends StdSerializer<OffsetDateTime> {
     public void serialize(OffsetDateTime offsetDateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         //DateTimeFormatter.ISO_DATE_TIME
         String tmp = DateTimeFormatter.ISO_DATE_TIME.format(offsetDateTime);
-        log.info("I AM HERE");
-        log.info(tmp);
         // replace
         if(tmp.lastIndexOf('Z') != -1)
         {
@@ -48,7 +45,6 @@ public class OffsetDateTimeSerializer extends StdSerializer<OffsetDateTime> {
                 index2=tmp.lastIndexOf('-');
             tmp = tmp.substring(0,index1).concat(tmp.substring(index2));
         }
-        log.info(tmp);
         jsonGenerator.writeString(tmp);
     }
 }
