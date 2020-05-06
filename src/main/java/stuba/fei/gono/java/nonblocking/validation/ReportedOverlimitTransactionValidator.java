@@ -8,6 +8,7 @@ import org.springframework.validation.Validator;
 import stuba.fei.gono.java.nonblocking.pojo.ReportedOverlimitTransaction;
 import stuba.fei.gono.java.pojo.Currency;
 import stuba.fei.gono.java.pojo.OrderCategory;
+import stuba.fei.gono.java.pojo.Vault;
 
 /***
  * <div class="en">Class implementing validaiton of ReportedOverlimitTransaction according to
@@ -46,22 +47,39 @@ public class ReportedOverlimitTransactionValidator implements Validator {
         ValidationUtils.rejectIfEmpty(errors,"sourceAccount","SOURCEACCOUNT_INVALID");
         if(transaction.getSourceAccount() != null)
             ValidationUtils.invokeValidator(accountValidator,transaction.getSourceAccount(),errors);
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"identificationId","IDENTIFICATIONID_INVALID");
         ValidationUtils.rejectIfEmpty(errors,"amount","FIELD_INVALID");
         ValidationUtils.rejectIfEmpty(errors,"vault","VAULT_INVALID");
-        ValidationUtils.rejectIfEmpty(errors,"transferDate","DATE_INVALID");
+        if(transaction.getVault() != null)
+        {
+            transaction.getVault().forEach(
+                    v ->
+                    {
+                        if(v.getType() == null)
+                            errors.reject("VAULTTYPE_INVALID");
+                        if(v.getNumber() <= 0)
+                            errors.reject("VAULTNUMBER_INVALID");
+                        if(v.getNominalValue() <= 0)
+                            errors.reject("VAULTNOMINALVALUE_INVALID");
+                    }
+            );
+        }
+        ValidationUtils.rejectIfEmpty(errors,"transferDate","TRANSFERDATE_INVALID");
         if(transaction.getTransferDate() != null)
         {
             ValidationUtils.invokeValidator(bankingDayValidator,transaction.getTransferDate(),errors);
             ValidationUtils.invokeValidator(transferDateValidator,transaction.getTransferDate(),errors);
         }
         ValidationUtils.rejectIfEmpty(errors,"createdBy","CREATEDBY_INVALID");
-        ValidationUtils.rejectIfEmpty(errors,"organisationUnitID","ORGANISATIONUNIT_INVALID");
+        ValidationUtils.rejectIfEmpty(errors,"organisationUnitID","ORGANISATIONUNITID_INVALID");
         if(transaction.getAmount() != null)
             ValidationUtils.invokeValidator(moneyValidator,transaction.getAmount(),errors);
         if(transaction.getOrderCategory() != null && transaction.getAmount() != null && transaction.getAmount().getCurrency() != null)
         {
-            if((transaction.getOrderCategory().equals(OrderCategory.FX) && transaction.getAmount().getCurrency().equals(Currency.EUR))||
-                    (transaction.getOrderCategory().equals(OrderCategory.DOMESTIC) && !transaction.getAmount().getCurrency().equals(Currency.EUR)))
+            if((transaction.getOrderCategory().equals(OrderCategory.FX)
+                    && transaction.getAmount().getCurrency().equals(Currency.EUR))||
+                    (transaction.getOrderCategory().equals(OrderCategory.DOMESTIC)
+                            && !transaction.getAmount().getCurrency().equals(Currency.EUR)))
                 errors.reject("CATEGORY_INVALID");
         }
 

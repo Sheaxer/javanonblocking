@@ -7,6 +7,7 @@ import org.springframework.validation.Validator;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +46,12 @@ public class TransferDateValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
-        Date today = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY,0);
+        cal.set(Calendar.MINUTE,0);
+        cal.set(Calendar.SECOND,0);
+        Date today = cal.getTime();
         Date date = (Date) o;
         if(date.before(today))
             errors.reject("INVALID_DATE_IN_PAST");

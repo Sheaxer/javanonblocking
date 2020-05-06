@@ -223,6 +223,8 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                                         {
                                             t.setState(State.CREATED);
                                         }
+                                        if(t.getState() == null)
+                                            t.setState(State.CREATED);
                                         return transactionRepository.save(t);
                                     }
                             )
@@ -322,7 +324,7 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                 ).switchIfEmpty(Mono.just(false));
                 /* Account is not identified by either Iban or Local Account Number - set the Mono to emit false */
             } else
-                activeAccount = Mono.just(false);
+                activeAccount = Mono.just(true);
         }
         /* sourceAccount is null - already caught in the validator, we don't want double error messages, set
         Mono to emit

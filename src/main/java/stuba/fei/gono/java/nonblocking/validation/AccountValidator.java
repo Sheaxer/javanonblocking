@@ -25,7 +25,7 @@ public class AccountValidator implements Validator {
         {
             if((account.getLocalAccountNumber() == null) || (account.getLocalAccountNumber().isEmpty()))
             {
-                errors.reject("INVALID_ACCOUNT");
+                errors.reject("SOURCEACCOUNT_INVALID");
             }
 
         }
