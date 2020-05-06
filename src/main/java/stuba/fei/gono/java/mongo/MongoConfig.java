@@ -1,13 +1,9 @@
 package stuba.fei.gono.java.mongo;
 
-import com.mongodb.client.MongoClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
-import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import stuba.fei.gono.java.mongo.converters.OffsetDateTimeReadConverter;
 import stuba.fei.gono.java.mongo.converters.OffsetDateTimeWriteConverter;
 

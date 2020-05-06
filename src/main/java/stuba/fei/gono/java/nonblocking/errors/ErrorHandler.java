@@ -41,7 +41,7 @@ public class ErrorHandler {
      * @param ex <div class="en">caught exception.</div>
      *           <div class="sk">odchytená výnimka.</div>
      * @return <div class="en">Mono emitting the list containing the error message of ex.</div>
-     * <div class="sk">Mono emitujúce zoznam ktorý obsahuje chybovú hlášku v ex.</div>
+     * <div class="sk">Mono emitujúce zoznam, ktorý obsahuje chybovú hlášku v ex.</div>
      */
     @ExceptionHandler(ReportedOverlimitTransactionBadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -75,7 +75,7 @@ public class ErrorHandler {
 
     /***
      * <div class="en">Handles validation errors that occur during put and post REST methods. Returns
-     * HTTTp code BAD_REQUEST - 400 and list of validation errors.</div>
+     * HTTP code BAD_REQUEST - 400 and list of validation errors.</div>
      * <div class="sk">Spracuváva validačné výnimky ktoré môžu nastať počas PUT a POST REST metód. Vracia
      * HTTP kód BAD_REQUEST - 400 a zoznam validačných chýb v tele odpovede.</div>
      * @see ReportedOverlimitTransactionValidationException

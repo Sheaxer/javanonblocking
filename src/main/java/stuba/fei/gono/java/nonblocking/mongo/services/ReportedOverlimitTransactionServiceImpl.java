@@ -186,8 +186,14 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
     }
 
     /***
-     * <div class="en">Validates the entity and if valid - saves it using the given id.</div>
-     * <div class="sk">Validuje entitu a ak je korektná - uloží ju so zadaným id.</div>
+     * <div class="en">Validates the entity and if valid - saves it using the given id. Notifies
+     * the NextSequenceService to check if the id used is a new maximal id. Sets the modification date
+     * to the time of saving and if entity with the given id did not exist before, sets the state to State.CREATED.
+     * </div>
+     * <div class="sk">Validuje entitu a ak je korektná - uloží ju so zadaným id. Notifikuje
+     * NextSequenceService inštanciu, aby skontrolova, či použité id je nová maximálna hodnota.
+     * Nastaví dátum modifikácie na dátum uloženia a ak entita so zadaným id predtým neexistovala,
+     * nastaví stav na State.CREATED.</div>
      * @param id <div class="en">id that will identify the saved entity.</div>
      *           <div class="sk">id ktoré bude identifikovať uloženú entitu.</div>
      * @param transaction <div class="en">entity to be saved.</div>
@@ -209,8 +215,18 @@ public class ReportedOverlimitTransactionServiceImpl implements ReportedOverlimi
                 {
                     t.setId(id);
                     t.setModificationDate(OffsetDateTime.now());
-                    return validate(t).then(nextSequenceService.needsUpdate(sequenceName,id)).
-                            then(transactionRepository.save(t));
+                    return validate(t).then(nextSequenceService.needsUpdate(sequenceName,id)).then(
+                            transactionRepository.existsById(id).flatMap(
+                                    b->
+                                    {
+                                        if(!b)
+                                        {
+                                            t.setState(State.CREATED);
+                                        }
+                                        return transactionRepository.save(t);
+                                    }
+                            )
+                    );
                 }
         );
 

@@ -38,13 +38,13 @@ public class NextSequenceService {
 
     /***
      * <div class="en">Increments the value of sequence with the given
-     * sequence name and return it.</div>
+     * sequence name.</div>
      * <div class="sk">Inkrementuje hodnotu sekvencie so zadaným menom.</div>
      * @see SequenceId
      * @param seqName <div class="en">name of the sequence.</div>
      *                <div class="sk">názov sekvencie.</div>
-     * @return <div class="en">updated value of the sequence.</div>
-     * <div class="sk">aktualizovná hodnota sekvencie.</div>
+     * @return <div class="en">Mono emitting updated value of the sequence.</div>
+     * <div class="sk">Momo emitujúce aktualizovnú hodnota sekvencie.</div>
      */
     private Mono<String> getNextSequence(@NotNull String seqName)
     {
