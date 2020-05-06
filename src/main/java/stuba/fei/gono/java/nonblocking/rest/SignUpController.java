@@ -31,12 +31,12 @@ public class SignUpController {
      * @param user <div class="en">entity representing new employee to be registered as a user of the system.</div>
      *             <div class="sk">entita reprezentujúca nového zamestnanca ktorý má byť zaregistrovaný ako
      *             nový používateľ systému.</div>
-     * @return <div class="en">Mono emitting the confirmation message.</div>
-     * <div class="sk">Mono emitujúce potvrdzovaciu správu.</div>
+     * @return <div class="en">Mono emitting the saved entity without password.</div>
+     * <div class="sk">Mono emitujúce uloženú entitu bez hesla.</div>
      */
     @PostMapping("/signup")
-    public Mono<String> signUp(@RequestBody Employee user)
+    public Mono<Employee> signUp(@RequestBody Employee user)
     {
-        return employeeService.saveEmployee(user).then(Mono.just("SUCCESSFULLY_REGISTERED"));
+        return employeeService.saveEmployee(user);
     }
 }
