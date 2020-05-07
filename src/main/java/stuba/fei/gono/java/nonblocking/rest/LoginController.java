@@ -67,20 +67,20 @@ public class LoginController {
             return   employeeService.validate(employee).then(
                     /* retrieves an entity from username */
                     employeeService.findEmployeeByUsername(employee.getUsername()).map(
-                user -> {
+                    user -> {
                     /* encodes the password from payload and checks if the retrieved entity has the same password */
-                    if(bCryptPasswordEncoder.matches(employee.getPassword(),user.getPassword()))
-                    {
-                        /* create HTTP header of the response - add generated JWT to Authorization header */
-                        HttpHeaders responseHeaders = new HttpHeaders();
-                        responseHeaders.set(HttpHeaders.AUTHORIZATION, JwtUtils.createJWT(employee.getUsername()));
-                        return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).build();
-                        //return ResponseEntity.ok(JwtUtils.createJWT(employee.getUsername()));
+                            if(bCryptPasswordEncoder.matches(employee.getPassword(),user.getPassword()))
+                            {
+                                /* create HTTP header of the response - add generated JWT to Authorization header */
+                                HttpHeaders responseHeaders = new HttpHeaders();
+                                responseHeaders.set(HttpHeaders.AUTHORIZATION, JwtUtils.createJWT(employee.getUsername()));
+                                return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).build();
+                                //return ResponseEntity.ok(JwtUtils.createJWT(employee.getUsername()));
+                            }
+                            else
+                                /* passwords don't match */
+                                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                     }
-                    else
-                        /* passwords don't match */
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                }
                 /* employee with the given username does not exist */
         ).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
     }
