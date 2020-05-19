@@ -34,6 +34,20 @@ public class SecurityConfigurationImpl {
         this.reactiveAuthenticationManager = reactiveAuthenticationManager;
     }
 
+    /***
+     * <div class="en">Sets up security chain - if not authorized returns Http code 401 - Unauthorized, when fails
+     * the authorization process returns HTTP code 403 - Forbidden, disables the default authorization methods
+     * and adds instances of SecurityContextRepository and JWTAuthenticationManager to handle authorization to system.
+     * Permits access to /login and to /signup endpoints and prevents unauthorized access to all other endpoints.</div>
+     * <div class="sk">Nastaví reťaz bezpečnostných filtrov: pri prístupu do systému bez autorizácie vráti HTTP kód 401
+     * - Unauthorized, pri nesprávnej autorizácii vráti HTTP kód 403 - Forbidden, zakáže použitie prednastavených
+     * autorizačných metód a pridá inštancie tried SecurityContextRepository a JWTAuthenticationManager ako správcov
+     * autorizácie do systému. Umožní neautorizovaný prístup k /login a /signup endpointom, a zakáže neautorizaovaný
+     * prístup ku všetkým ostatným endpointom.</div>
+     * @param http
+     * @return <div class="en">configured security filter chain.</div>
+     * <div class="sk">konfigurovaná reťaz bezpečnostných filtrov.</div>
+     */
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         /* handle exceptions during authorization */

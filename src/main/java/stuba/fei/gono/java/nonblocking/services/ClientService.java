@@ -3,8 +3,8 @@ package stuba.fei.gono.java.nonblocking.services;
 import reactor.core.publisher.Mono;
 import stuba.fei.gono.java.pojo.Client;
 /***
- * Interface for marshalling and de-marshalling Client entities.
- */
+ * <div class="en">Interface for marshalling and de-marshalling Client entities.</div>
+ * <div class="sk">Rozhranie na marshalling a de-marshalling entitít typu Client.</div>*/
 public interface ClientService {
     /***
      * <div class="en">Finds the entity with the given id.</div>

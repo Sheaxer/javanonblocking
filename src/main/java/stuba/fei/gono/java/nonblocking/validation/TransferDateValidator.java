@@ -53,12 +53,16 @@ public class TransferDateValidator implements Validator {
         cal.set(Calendar.SECOND,0);
         Date today = cal.getTime();
         Date date = (Date) o;
-        if(date.before(today))
+        if(date.before(today)) {
             errors.reject("INVALID_DATE_IN_PAST");
+            return;
+        }
         Instant i1 = today.toInstant().truncatedTo(ChronoUnit.DAYS);
         Instant i2 = date.toInstant().truncatedTo(ChronoUnit.DAYS);
-        if(i1.equals(i2))
+        if(i1.equals(i2)) {
             errors.reject("INVALID_DATE_IN_PAST");
+            return;
+        }
         long diff = date.getTime() - today.getTime();
         if(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) < cDays)
             errors.reject("FIELD_INVALID_TOO_NEAR_IN_FUTURE");

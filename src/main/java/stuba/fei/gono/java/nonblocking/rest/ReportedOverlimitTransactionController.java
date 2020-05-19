@@ -96,6 +96,7 @@ public class ReportedOverlimitTransactionController {
      * neúspešná.</div>
      */
     @PutMapping(value = "/{id}", consumes = "application/json")
+    @PostMapping(value = "/{id}",consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Mono<ReportedOverlimitTransaction> putTransaction(@PathVariable String id,
                                                              @RequestBody ReportedOverlimitTransaction transaction)

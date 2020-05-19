@@ -49,6 +49,7 @@ public class JWTAuthenticationManager implements ReactiveAuthenticationManager {
         String user = JwtUtils.getUserFromToken(token);
         if(user!= null)
         {
+            // checks if employee with that user name exists
            return employeeService.employeeExistsByUsername(user).flatMap(
                     b ->
                     {
